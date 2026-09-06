@@ -7,18 +7,21 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      devOptions: {
+        enabled: true,
+      },
       manifest: {
-        name: 'Simply Weather',
+        name: 'Simply Weather v0.1',
         short_name: 'Weather',
         description: 'Get your weather. Nothing more, nothing less.',
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        background_color: '#000000',
-        theme_color: '#111111',
+        background_color: '#285bae',
+        theme_color: '#285bae',
         icons: [
-          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/svg+xml' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/svg+xml' }
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }
         ]
       }
     })

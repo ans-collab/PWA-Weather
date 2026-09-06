@@ -65,13 +65,13 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
   }, [location]);
 
   return (
-    <div className="relative flex h-full flex-col items-start justify-start overflow-y-auto p-10">
+    <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start overflow-y-auto p-10">
       {photographer && (
-        <div className="absolute left-2 top-2 z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
+        <div className="absolute left-[6px] top-[2px] z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
           Photo by {photographer}
         </div>
       )}
-      <div className="absolute right-2 top-2 z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
+      <div className="absolute right-[6px] top-[2px] z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
         Powered by Open-Meteo
       </div>
       {loading && (

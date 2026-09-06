@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Weather } from "./engine/weather";
 import { IPexelData } from "./engine/pexel.models";
 import { PexelClient } from "./clients/PexelClient";
@@ -9,9 +9,20 @@ import { ILocationData } from "./engine/location.models";
 const App: React.FC = () => {
   const [location, setLocation] = useState<ILocationData | undefined>();
   const [pexelData, setPexelData] = useState<IPexelData | null>(null);
+  const [installPrompt, setInstallPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
 
   // constructor
   useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+    const handleAppInstalled = () => setInstallPrompt(null);
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+
     const fetchScenicPhoto = async () => {
       try {
         let geoLocation: ILocationData | undefined;
@@ -46,9 +57,21 @@ const App: React.FC = () => {
 
     // destructor
     return () => {
-      // clean up stuff
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt,
+      );
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
+
+  const installApp = async () => {
+    if (!installPrompt) return;
+
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  };
 
   return (
     <div
@@ -59,6 +82,18 @@ const App: React.FC = () => {
         backgroundPosition: "center",
       }}
     >
+      <header className="flex h-12 shrink-0 items-center justify-between bg-black/70 px-4 text-white">
+        <h1 className="font-bold">Simply Weather</h1>
+        {installPrompt && (
+          <button
+            className="rounded bg-white/90 px-3 py-1 text-sm font-semibold text-black hover:bg-white"
+            onClick={installApp}
+            type="button"
+          >
+            Install app
+          </button>
+        )}
+      </header>
       <Weather
         location={location}
         photographer={pexelData?.photos[0]?.photographer}

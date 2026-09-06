@@ -8,3 +8,8 @@ declare module 'virtual:pwa-register' {
 declare module '*.css'
 declare module '*.png'
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+
