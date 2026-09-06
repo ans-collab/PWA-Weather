@@ -8,9 +8,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'webgl-explore',
-        short_name: 'WebGL',
-        description: 'Explore WebGL powered by Babylon.js',
+        name: 'Simply Weather',
+        short_name: 'Weather',
+        description: 'Get your weather. Nothing more, nothing less.',
         start_url: '/',
         scope: '/',
         display: 'standalone',
