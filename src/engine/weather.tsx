@@ -15,24 +15,52 @@ export const Weather = ({ location }: WeatherProps) => {
   const textColor = "text-white";
 
   useEffect(() => {
+    if (!location) {
+      setLoading(false);
+      setError("Location access is unavailable. Enable location access to view local weather.");
+      return;
+    }
+
+    setError(null);
+    const cacheKey = `weather:${location.latitude.toFixed(2)}:${location.longitude.toFixed(2)}`;
+    const cachedWeather = localStorage.getItem(cacheKey);
+    let hasCachedWeather = false;
+
+    if (cachedWeather) {
+      try {
+        setWeather(JSON.parse(cachedWeather) as IWeatherData);
+        hasCachedWeather = true;
+        setLoading(false);
+      } catch {
+        localStorage.removeItem(cacheKey);
+      }
+    }
+
     const initialize = async () => {
       try {
         const weatherData = await WeatherClient.getWeather(
-          location!.longitude,
-          location!.latitude,
+          location.longitude,
+          location.latitude,
         );
         setWeather(weatherData);
         setLoading(false);
+        if (weatherData) {
+          localStorage.setItem(cacheKey, JSON.stringify(weatherData));
+        }
       } catch (e: any) {
         console.error("Weather: Error fetching weather data", e);
-        setError(e.message);
+        if (!hasCachedWeather) {
+          setError(
+            navigator.onLine
+              ? "Weather is temporarily unavailable."
+              : "You're offline and no cached weather is available.",
+          );
+        }
         setLoading(false);
       }
     };
 
-    if (location) {
-      initialize();
-    }
+    initialize();
   }, [location]);
 
   return (
