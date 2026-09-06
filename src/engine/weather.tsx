@@ -94,7 +94,7 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
         {!loading && !error && (
           <>
             <div
-              className={`p-3 md:p-8 bold rounded-2xl w-full md:w-[40%]`}
+              className={`p-3 md:p-8 bold mt-5 rounded-2xl w-full md:w-[40%]`}
               style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
             >
               <div
