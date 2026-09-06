@@ -33,7 +33,7 @@ const App: React.FC = () => {
         const photoResponse: IPexelData | null =
           await PexelClient.getRandomImage(
             geoLocation
-              ? `${geoLocation.address.city}, ${geoLocation.address.state} scenic attraction`
+              ? `${geoLocation.address.city}, ${geoLocation.address.state} scenic urban landscape park`
               : "weather",
           );
         setPexelData(photoResponse);
@@ -52,14 +52,17 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="app-shell bg-gray-500"
+      className="app-shell relative bg-gray-500"
       style={{
         backgroundImage: `url(${pexelData?.photos[0]?.src.portrait})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <Weather location={location} />
+      <Weather
+        location={location}
+        photographer={pexelData?.photos[0]?.photographer}
+      />
     </div>
   );
 };

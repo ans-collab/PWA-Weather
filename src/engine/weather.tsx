@@ -6,9 +6,10 @@ import { IWeatherData } from "./weather.models";
 
 interface WeatherProps {
   location?: ILocationData;
+  photographer?: string;
 }
 
-export const Weather = ({ location }: WeatherProps) => {
+export const Weather = ({ location, photographer }: WeatherProps) => {
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<IWeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +65,15 @@ export const Weather = ({ location }: WeatherProps) => {
   }, [location]);
 
   return (
-    <div className="flex h-full flex-col items-start justify-start overflow-y-auto p-10">
+    <div className="relative flex h-full flex-col items-start justify-start overflow-y-auto p-10">
+      {photographer && (
+        <div className="absolute left-2 top-2 z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
+          Photo by {photographer}
+        </div>
+      )}
+      <div className="absolute right-2 top-2 z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
+        Powered by Open-Meteo
+      </div>
       {loading && (
         <div
           className="text-4xl p-8 text-blue-600 bold rounded-2xl"

@@ -6,5 +6,5 @@ declare module 'virtual:pwa-register' {
 }
 
 declare module '*.css'
-declare module '*.svg'
+declare module '*.png'
 
