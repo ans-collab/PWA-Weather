@@ -36,7 +36,7 @@ export const Weather = ({ location }: WeatherProps) => {
   }, [location]);
 
   return (
-    <div className="items-left justify-center flex flex-col h-full p-10">
+    <div className="flex h-full flex-col items-start justify-start overflow-y-auto p-10">
       {loading && (
         <div
           className="text-4xl p-8 text-blue-600 bold rounded-2xl"
@@ -57,7 +57,7 @@ export const Weather = ({ location }: WeatherProps) => {
       {!loading && !error && (
         <>
           <div
-            className={`p-8 bold rounded-2xl w-[40%]`}
+            className={`p-3 md:p-8 bold rounded-2xl w-full md:w-[40%]`}
             style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
           >
             <div
@@ -68,8 +68,8 @@ export const Weather = ({ location }: WeatherProps) => {
                 : "Location not available"}
             </div>
             {weather ? (
-              <div className="mt-5 text-left text-white">
-                <div className="text-6xl text-shadow-lg text-shadow-black font-bold">
+              <div className="mt-5 text-start text-white">
+                <div className="text-3xl md:text-6xl text-shadow-lg text-shadow-black font-bold">
                   {weather.current.temperature_2m}&deg;F
                 </div>
                 <div
@@ -95,32 +95,34 @@ export const Weather = ({ location }: WeatherProps) => {
           </div>
           {weather && (
             <div
-              className={`p-8 bold rounded-2xl mt-2`}
+              className={`p-3 md:p-8 bold w-full ounded-2xl mt-2`}
               style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
             >
               <div
-                className={`mb-3 text-xl ${textColor} text-shadow-lg text-shadow-black font-bold`}
+                className={`mb-3 text-lg md:text-xl ${textColor} text-shadow-lg text-shadow-black font-bold`}
               >
                 This Week's Forecast
               </div>
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
+              <div className="grid grid-cols-1 gap-1 lg:grid-cols-7 lg:gap-3">
                 {weather.daily.time.slice(0, 7).map((date, index) => (
                   <div
-                    className="rounded-xl bg-black/60 p-3 text-center"
+                    className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-xl bg-black/60 p-3 text-left lg:block lg:text-center"
                     key={date}
                   >
-                    <div className={`font-bold ${textColor}`}>
-                      {new Date(`${date}T12:00:00`).toLocaleDateString(
-                        undefined,
-                        { weekday: "short" },
-                      )}
+                    <div className="flex flex-col lg:block">
+                      <div className={`font-bold ${textColor}`}>
+                        {new Date(`${date}T12:00:00`).toLocaleDateString(
+                          undefined,
+                          { weekday: "short" },
+                        )}
+                      </div>
+                      <div className={`text-sm ${textColor}`}>{date}</div>
                     </div>
-                    <div className={`text-sm ${textColor}`}>{date}</div>
-                    <div className={`mt-1 font-bold ${textColor}`}>
+                    <div className={`font-bold ${textColor} lg:mt-1`}>
                       {weather.daily.temperature_2m_max[index]}&deg; /{" "}
                       {weather.daily.temperature_2m_min[index]}&deg;F
                     </div>
-                    <div className={`mt-1 font-bold ${textColor}`}>
+                    <div className={`font-bold ${textColor} lg:mt-1`}>
                       Rain {weather.daily.precipitation_probability_max[index]}%
                     </div>
                   </div>
