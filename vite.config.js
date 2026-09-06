@@ -16,8 +16,8 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: `Simply Weather ${appVersion}`,
-        short_name: `Simply Weather ${appVersion}`,
+        name: `Simply Weather`,
+        short_name: `Simply Weather`,
         description: 'Get your weather. Nothing more, nothing less.',
         start_url: '/',
         scope: '/',
