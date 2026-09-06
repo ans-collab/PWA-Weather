@@ -1,4 +1,4 @@
-import { ILocationData } from "../engine/weather.models";
+import { ILocationData } from "../engine/location.models";
 
 export class LocationClient {
     static getCurrentLocation(): Promise<GeolocationPosition | null> {
