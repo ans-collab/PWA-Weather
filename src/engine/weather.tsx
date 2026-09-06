@@ -1,61 +1,38 @@
 import { useEffect, useState } from "react";
-import { IPexelData } from "./pexel.models";
 import { LocationClient } from "../clients/locationClient";
 import { ILocationData } from "./location.models";
 import { WeatherClient } from "../clients/weatherClient";
 import { IWeatherData } from "./weather.models";
 
-export const Weather = () => {
-  const [loading, setLoading] = useState(true);
-  const [location, setLocation] = useState<string | undefined>();
-  const [weather, setWeather] = useState<IWeatherData | null>(null);
+interface WeatherProps {
+  location?: ILocationData;
+}
 
-  // constructor
+export const Weather = ({ location }: WeatherProps) => {
+  const [loading, setLoading] = useState(true);
+  const [weather, setWeather] = useState<IWeatherData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const initialize = async () => {
       try {
-        // load location data.
-        const currentLocation = await LocationClient.getCurrentLocation();
-        if (currentLocation) {
-          const geoLocation: ILocationData =
-            await LocationClient.getGeoLocation(
-              currentLocation.coords.longitude.toString(),
-              currentLocation.coords.latitude.toString(),
-            );
-          setLocation(
-            geoLocation
-              ? `${geoLocation.address.city}, ${geoLocation.address.state}`
-              : undefined,
-          );
-
-          // load weather data.
-          const weatherData = await WeatherClient.getWeather(
-            currentLocation.coords.longitude,
-            currentLocation.coords.latitude,
-          );
-          setWeather(weatherData);
-
-          setLoading(false);
-        } else {
-          console.error("Weather: Unable to get current location.");
-          setLoading(false);
-        }
-      } catch (e) {
+        const weatherData = await WeatherClient.getWeather(
+          location!.longitude,
+          location!.latitude,
+        );
+        setWeather(weatherData);
         setLoading(false);
-        console.error("App: createScene threw", e);
-        return;
+      } catch (e: any) {
+        console.error("Weather: Error fetching weather data", e);
+        setError(e.message);
+        setLoading(false);
       }
     };
 
-    if (loading) {
+    if (location) {
       initialize();
     }
-
-    // destructor
-    return () => {
-      // clean up stuff
-    };
-  }, []);
+  }, [location]);
 
   return (
     <div className="items-center justify-center flex flex-col h-full">
@@ -67,13 +44,24 @@ export const Weather = () => {
           Loading weather...
         </div>
       )}
-      {!loading && (
+      {error && (
+        <div
+          className="p-8 text-white bold rounded-2xl"
+          style={{ backgroundColor: "rgba(255, 0, 0, 0.6)" }}
+        >
+          <div className='text-base'>Oops! Something went wrong:</div>
+          <div className='text-3xl'>{error}</div>
+        </div>
+      )}
+      {!loading && !error && (
         <div
           className="p-8 text-blue-600 bold rounded-2xl"
           style={{ backgroundColor: "rgba(255, 255, 255, 0.6)" }}
         >
           <div className="text-2xl text-left">
-            {location ? location : "Location not available"}
+            {location
+              ? `${location.address.city}, ${location.address.state}`
+              : "Location not available"}
           </div>
           {weather ? (
             <div className="mt-5 text-left text-black">
