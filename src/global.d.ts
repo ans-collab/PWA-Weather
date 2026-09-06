@@ -13,3 +13,5 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+declare const __APP_VERSION__: string;
+

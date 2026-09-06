@@ -18,7 +18,9 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
   useEffect(() => {
     if (!location) {
       setLoading(false);
-      setError("Location access is unavailable. Enable location access to view local weather.");
+      setError(
+        "Location access is unavailable. Enable location access to view local weather.",
+      );
       return;
     }
 
@@ -65,110 +67,121 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
   }, [location]);
 
   return (
-    <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start overflow-y-auto p-10">
-      {photographer && (
-        <div className="absolute left-[6px] top-[2px] z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
-          Photo by {photographer}
-        </div>
-      )}
-      <div className="absolute right-[6px] top-[2px] z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
-        Powered by Open-Meteo
-      </div>
-      {loading && (
-        <div
-          className="text-4xl p-8 text-blue-600 bold rounded-2xl"
-          style={{ backgroundColor: "rgba(255, 255, 255, 0.6)" }}
-        >
-          Loading weather...
-        </div>
-      )}
-      {error && (
-        <div
-          className="p-8 text-white bold rounded-2xl"
-          style={{ backgroundColor: "rgba(255, 0, 0, 0.6)" }}
-        >
-          <div className="text-base">Oops! Something went wrong:</div>
-          <div className="text-3xl">{error}</div>
-        </div>
-      )}
-      {!loading && !error && (
-        <>
+    <div className="overflow-y-auto">
+      <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start p-3 m:p-10">
+        {photographer && (
+          <div className="absolute left-[6px] top-[2px] z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
+            Photo by {photographer}
+          </div>
+        )}
+        {loading && (
           <div
-            className={`p-3 md:p-8 bold rounded-2xl w-full md:w-[40%]`}
+            className="text-4xl p-8 text-blue-600 bold rounded-2xl"
+            style={{ backgroundColor: "rgba(255, 255, 255, 0.6)" }}
+          >
+            Loading weather...
+          </div>
+        )}
+        {error && (
+          <div
+            className="p-8 text-white bold rounded-2xl"
             style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
           >
-            <div
-              className={`text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
-            >
-              {location
-                ? `${location.address.city}, ${location.address.state}`
-                : "Location not available"}
-            </div>
-            {weather ? (
-              <div className="mt-5 text-start text-white">
-                <div className="text-3xl md:text-6xl text-shadow-lg text-shadow-black font-bold">
-                  {weather.current.temperature_2m}&deg;F
-                </div>
-                <div
-                  className={`bold ${textColor} text-shadow-lg text-shadow-black font-bold`}
-                >
-                  <div className="mt-2 text-xl">
-                    Feels like {weather.current.apparent_temperature}&deg;F
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-lg">
-                    <div>Humidity: {weather.current.relative_humidity_2m}%</div>
-                    <div>Wind: {weather.current.wind_speed_10m} mph</div>
-                    <div>Weather code: {weather.current.weather_code}</div>
-                    <div>
-                      Updated:{" "}
-                      {new Date(weather.current.time).toLocaleTimeString()}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-5 text-2xl">Weather data unavailable</div>
-            )}
+            <div className="text-base">Weather is not available.</div>
+            <div className="text-3xl">{error}</div>
           </div>
-          {weather && (
+        )}
+        {!loading && !error && (
+          <>
             <div
-              className={`p-3 md:p-8 bold w-full ounded-2xl mt-2`}
+              className={`p-3 md:p-8 bold rounded-2xl w-full md:w-[40%]`}
               style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
             >
               <div
-                className={`mb-3 text-lg md:text-xl ${textColor} text-shadow-lg text-shadow-black font-bold`}
+                className={`text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
               >
-                This Week's Forecast
+                {location
+                  ? `${location.address.city}, ${location.address.state}`
+                  : "Location not available"}
               </div>
-              <div className="grid grid-cols-1 gap-1 lg:grid-cols-7 lg:gap-3">
-                {weather.daily.time.slice(0, 7).map((date, index) => (
+              {weather ? (
+                <div className="mt-5 text-start text-white">
+                  <div className="text-3xl md:text-6xl text-shadow-lg text-shadow-black font-bold">
+                    {weather.current.temperature_2m}&deg;F
+                  </div>
                   <div
-                    className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-xl bg-black/60 p-3 text-left lg:block lg:text-center"
-                    key={date}
+                    className={`bold ${textColor} text-shadow-lg text-shadow-black font-bold`}
                   >
-                    <div className="flex flex-col lg:block">
-                      <div className={`font-bold ${textColor}`}>
-                        {new Date(`${date}T12:00:00`).toLocaleDateString(
-                          undefined,
-                          { weekday: "short" },
-                        )}
+                    <div className="mt-2 text-xl">
+                      Feels like {weather.current.apparent_temperature}&deg;F
+                    </div>
+                    <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-lg">
+                      <div>
+                        Humidity: {weather.current.relative_humidity_2m}%
                       </div>
-                      <div className={`text-sm ${textColor}`}>{date}</div>
-                    </div>
-                    <div className={`font-bold ${textColor} lg:mt-1`}>
-                      {weather.daily.temperature_2m_max[index]}&deg; /{" "}
-                      {weather.daily.temperature_2m_min[index]}&deg;F
-                    </div>
-                    <div className={`font-bold ${textColor} lg:mt-1`}>
-                      Rain {weather.daily.precipitation_probability_max[index]}%
+                      <div>Wind: {weather.current.wind_speed_10m} mph</div>
+                      <div>Weather code: {weather.current.weather_code}</div>
+                      <div>
+                        Updated:{" "}
+                        {new Date(weather.current.time).toLocaleTimeString()}
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div className="mt-5 text-2xl">Weather data unavailable</div>
+              )}
             </div>
-          )}
-        </>
-      )}
+            {weather && (
+              <div
+                className={`p-3 md:p-8 bold w-full ounded-2xl mt-2`}
+                style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
+              >
+                <div
+                  className={`mb-3 text-lg md:text-xl ${textColor} text-shadow-lg text-shadow-black font-bold`}
+                >
+                  This Week's Forecast
+                </div>
+                <div className="grid grid-cols-1 gap-1 lg:grid-cols-7 lg:gap-3">
+                  {weather.daily.time.slice(0, 7).map((date, index) => (
+                    <div
+                      className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-xl bg-black/60 p-3 text-left lg:block lg:text-center"
+                      key={date}
+                    >
+                      <div className="flex flex-col lg:block">
+                        <div className={`font-bold ${textColor}`}>
+                          {new Date(`${date}T12:00:00`).toLocaleDateString(
+                            undefined,
+                            { weekday: "short" },
+                          )}
+                        </div>
+                        <div className={`text-sm ${textColor}`}>{date}</div>
+                      </div>
+                      <div className={`font-bold ${textColor} lg:mt-1`}>
+                        {weather.daily.temperature_2m_max[index]}&deg; /{" "}
+                        {weather.daily.temperature_2m_min[index]}&deg;F
+                      </div>
+                      <div className={`font-bold ${textColor} lg:mt-1`}>
+                        Rain{" "}
+                        {weather.daily.precipitation_probability_max[index]}%
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      <div className="flex w-full shrink-0 flex-row justify-between">
+          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+            {__APP_VERSION__}
+          </div>
+          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+            Weather provided by Open-Meteo
+          </div>
+        </div>
     </div>
   );
 };

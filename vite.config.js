@@ -2,7 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const appVersion = 'v0.2'
+
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(appVersion),
+  },
   plugins: [
     react(),
     VitePWA({
@@ -11,8 +16,8 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: 'Simply Weather v0.1',
-        short_name: 'Simply Weather',
+        name: `Simply Weather ${appVersion}`,
+        short_name: `Simply Weather ${appVersion}`,
         description: 'Get your weather. Nothing more, nothing less.',
         start_url: '/',
         scope: '/',
