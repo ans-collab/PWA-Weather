@@ -12,7 +12,7 @@ export default defineConfig({
       },
       manifest: {
         name: 'Simply Weather v0.1',
-        short_name: 'Weather',
+        short_name: 'Simply Weather',
         description: 'Get your weather. Nothing more, nothing less.',
         start_url: '/',
         scope: '/',
