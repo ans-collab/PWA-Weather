@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const appVersion = 'v0.2'
+const appVersion = 'v0.2.1'
 
 export default defineConfig({
   define: {
