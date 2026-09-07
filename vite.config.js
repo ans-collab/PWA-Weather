@@ -30,6 +30,20 @@ export default defineConfig({
         ],
         orientation: 'portrait',
         categories: ['weather', 'utilities', 'productivity'],
+        screenshots: [
+          {
+            src: '/screenshots/weather-desktop.png',
+            sizes: '2048x996',
+            type: 'image/png',
+            label: 'Desktop Weather Details Screen'
+          },
+          {
+            src: '/screenshots/weather-mobile.png',
+            sizes: '1031x1056',
+            type: 'image/png',
+            label: 'Mobile Weather Details Screen'
+          }
+        ]
       }
     })
   ],
