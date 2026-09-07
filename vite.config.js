@@ -18,16 +18,18 @@ export default defineConfig({
       manifest: {
         name: `Simply Weather`,
         short_name: `Simply Weather`,
-        description: 'Get your weather. Nothing more, nothing less.',
+        description: 'This is your local weather app with no ads, no fuss, no mess. It just works. It nothing nothing more, and nothing less. Expect incremental updates for added enhancements.',
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        background_color: '#285bae',
-        theme_color: '#285bae',
+        background_color: '#FFFFFF',
+        theme_color: '#FFFFFF',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }
-        ]
+        ],
+        orientation: 'portrait',
+        categories: ['weather', 'utilities', 'productivity'],
       }
     })
   ],
