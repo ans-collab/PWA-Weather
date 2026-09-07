@@ -17,6 +17,7 @@ export default defineConfig({
       },
       manifest: {
         name: `Simply Weather`,
+        id: `Simply Weather`,
         short_name: `Simply Weather`,
         description: 'This is your local weather app with no ads, no fuss, no mess. It just works. It nothing nothing more, and nothing less. Expect incremental updates for added enhancements.',
         start_url: '/',
