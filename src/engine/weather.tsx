@@ -2,12 +2,38 @@ import { useEffect, useState } from "react";
 import { LocationClient } from "../clients/locationClient";
 import { ILocationData } from "./location.models";
 import { WeatherClient } from "../clients/weatherClient";
-import { IWeatherData } from "./weather.models";
+import { getWeatherCondition, IWeatherData } from "./weather.models";
 
 interface WeatherProps {
   location?: ILocationData;
   photographer?: string;
 }
+
+const WeatherAnimation = ({ weatherCode }: { weatherCode: number }) => {
+  const condition = getWeatherCondition(weatherCode);
+
+  return (
+    <div
+      className={`weather-animation ${condition.icon}`}
+      role="img"
+      aria-label={condition.name}
+    >
+      <span className="weather-animation__sun" />
+      <span className="weather-animation__cloud" />
+      <span className="weather-animation__precipitation" />
+      <span className="weather-animation__lightning" />
+      <span className="weather-animation__fog" />
+    </div>
+  );
+};
+
+const formatForecastDate = (date: string) => {
+  const forecastDate = new Date(`${date}T12:00:00`);
+  const month = forecastDate.toLocaleDateString("en-US", { month: "short" });
+  const formattedMonth = month === "Sep" ? "Sept" : month;
+
+  return `${formattedMonth} ${forecastDate.getDate()}, ${forecastDate.getFullYear()}`;
+};
 
 export const Weather = ({ location, photographer }: WeatherProps) => {
   const [loading, setLoading] = useState(true);
@@ -75,31 +101,33 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
           </div>
         )}
         {loading && (
-          <div
-            className="p-8 text-white bold rounded-2xl"
-            style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
-          >
+          <div className="fixed inset-0 z-20 flex items-center justify-center">
             <div
-              className="flex items-center justify-center gap-5 rounded-2xl p-8 text-blue-600"
-              role="status"
-              style={{ backgroundColor: "transparent" }}
+              className="p-8 text-white bold rounded-2xl"
+              style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
             >
               <div
-                className={`flex items-center justify-center gap-4 text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
+                className="flex items-center justify-center gap-5 rounded-2xl p-8 text-blue-600"
+                role="status"
+                style={{ backgroundColor: "transparent" }}
               >
-                <div className="relative h-16 w-16 animate-[spin_4s_linear_infinite]">
-                  {[0, 45, 90, 135, 180, 225, 270, 315].map((rotation) => (
-                    <div
-                      className="absolute inset-0"
-                      key={rotation}
-                      style={{ transform: `rotate(${rotation}deg)` }}
-                    >
-                      <div className="mx-auto h-4 w-2 rounded-full bg-amber-400" />
-                    </div>
-                  ))}
-                  <div className="absolute inset-0 m-auto h-10 w-10 rounded-full bg-amber-300 shadow-[0_0_0_5px_rgba(251,191,36,0.2)]" />
+                <div
+                  className={`flex items-center justify-center gap-4 text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
+                >
+                  <div className="relative h-16 w-16 animate-[spin_4s_linear_infinite]">
+                    {[0, 45, 90, 135, 180, 225, 270, 315].map((rotation) => (
+                      <div
+                        className="absolute inset-0"
+                        key={rotation}
+                        style={{ transform: `rotate(${rotation}deg)` }}
+                      >
+                        <div className="mx-auto h-4 w-2 rounded-full bg-amber-400" />
+                      </div>
+                    ))}
+                    <div className="absolute inset-0 m-auto h-10 w-10 rounded-full bg-amber-300 shadow-[0_0_0_5px_rgba(251,191,36,0.2)]" />
+                  </div>
+                  <span className="text-2xl font-bold">Loading weather...</span>
                 </div>
-                <span className="text-2xl font-bold">Loading weather...</span>
               </div>
             </div>
           </div>
@@ -134,6 +162,14 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
                   <div
                     className={`bold ${textColor} text-shadow-lg text-shadow-black font-bold`}
                   >
+                    <div className="my-4 flex items-center gap-4">
+                      <WeatherAnimation
+                        weatherCode={weather.current.weather_code}
+                      />
+                      <span className="text-2xl">
+                        {getWeatherCondition(weather.current.weather_code).name}
+                      </span>
+                    </div>
                     <div className="mt-2 text-xl">
                       Feels like {weather.current.apparent_temperature}&deg;F
                     </div>
@@ -156,7 +192,7 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
             </div>
             {weather && (
               <div
-                className={`p-3 md:p-8 bold w-full ounded-2xl mt-2`}
+                className={`p-3 md:p-8 bold w-full rounded-2xl mt-2`}
                 style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
               >
                 <div
@@ -177,7 +213,14 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
                             { weekday: "short" },
                           )}
                         </div>
-                        <div className={`text-sm ${textColor}`}>{date}</div>
+                        <div className={`text-sm ${textColor}`}>
+                          {formatForecastDate(date)}
+                        </div>
+                      </div>
+                      <div className="w-full justify-self-center lg:mx-auto">
+                        <WeatherAnimation
+                          weatherCode={weather.daily.weather_code[index]}
+                        />
                       </div>
                       <div className={`font-bold ${textColor} lg:mt-1`}>
                         {weather.daily.temperature_2m_max[index]}&deg; /{" "}
@@ -195,15 +238,16 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
           </>
         )}
       </div>
-
-      <div className="flex w-full shrink-0 flex-row justify-between text-md">
-        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
-          {__APP_VERSION__}
+      {!loading && (
+        <div className="flex w-full shrink-0 flex-row justify-between text-md">
+          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+            {__APP_VERSION__}
+          </div>
+          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+            Weather provided by Open-Meteo
+          </div>
         </div>
-        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
-          Weather provided by Open-Meteo
-        </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -53,3 +53,143 @@ export interface IWeatherData {
         precipitation_probability_max: number[];
     };
 }
+
+export const weatherConditions = {
+  CLEAR: {
+    name: "Sunny",
+    icon: "weather-animation--sunny",
+  },
+
+  MOSTLY_CLEAR: {
+    name: "Mostly Sunny",
+    icon: "weather-animation--mostly-sunny",
+  },
+
+  PARTLY_CLOUDY: {
+    name: "Partly Cloudy",
+    icon: "weather-animation--partly-cloudy",
+  },
+
+  CLOUDY: {
+    name: "Cloudy",
+    icon: "weather-animation--cloudy",
+  },
+
+  FOGGY: {
+    name: "Foggy",
+    icon: "weather-animation--foggy",
+  },
+
+  LIGHT_RAIN: {
+    name: "Light Rain",
+    icon: "weather-animation--light-rain",
+  },
+
+  RAIN: {
+    name: "Rain",
+    icon: "weather-animation--rain",
+  },
+
+  HEAVY_RAIN: {
+    name: "Heavy Rain",
+    icon: "weather-animation--heavy-rain",
+  },
+
+  LIGHT_SNOW: {
+    name: "Light Snow",
+    icon: "weather-animation--light-snow",
+  },
+
+  SNOW: {
+    name: "Snow",
+    icon: "weather-animation--snow",
+  },
+
+  HEAVY_SNOW: {
+    name: "Heavy Snow",
+    icon: "weather-animation--heavy-snow",
+  },
+
+  THUNDERSTORM: {
+    name: "Thunderstorm",
+    icon: "weather-animation--thunderstorm",
+  },
+};
+
+export const getWeatherCondition = (weatherCode: number) => {
+  switch (weatherCode) {
+    // Clear
+    case 0:
+      return weatherConditions.CLEAR;
+
+    // Mainly clear
+    case 1:
+      return weatherConditions.MOSTLY_CLEAR;
+
+    // Partly cloudy
+    case 2:
+      return weatherConditions.PARTLY_CLOUDY;
+
+    // Overcast
+    case 3:
+      return weatherConditions.CLOUDY;
+
+    // Fog
+    case 45:
+    case 48:
+      return weatherConditions.FOGGY;
+
+    // Light drizzle
+    case 51:
+    case 53:
+    case 56:
+      return weatherConditions.LIGHT_RAIN;
+
+    // Heavy drizzle
+    case 55:
+    case 57:
+      return weatherConditions.RAIN;
+
+    // Light rain
+    case 61:
+      return weatherConditions.LIGHT_RAIN;
+
+    // Moderate rain
+    case 63:
+    case 66:
+      return weatherConditions.RAIN;
+
+    // Heavy rain
+    case 65:
+    case 67:
+      return weatherConditions.HEAVY_RAIN;
+
+    // Light snow
+    case 71:
+    case 77:
+    case 85:
+      return weatherConditions.LIGHT_SNOW;
+
+    // Moderate snow
+    case 73:
+      return weatherConditions.SNOW;
+
+    // Heavy snow
+    case 75:
+    case 86:
+      return weatherConditions.HEAVY_SNOW;
+
+    // Thunderstorms
+    case 95:
+    case 96:
+    case 99:
+      return weatherConditions.THUNDERSTORM;
+
+    // Unknown code
+    default:
+      return {
+        name: "Unknown",
+        icon: "weather-animation--cloudy",
+      };
+  }
+}

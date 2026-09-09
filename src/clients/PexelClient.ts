@@ -11,7 +11,7 @@ export class PexelClient {
 
     try {
       const response: Response = await fetch(
-        `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=portrait&per_page=1`,
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=portrait&per_page=5`,
         {
           headers: {
             Authorization: apiKey,

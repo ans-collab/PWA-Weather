@@ -8,7 +8,9 @@ import { ILocationData } from "./engine/location.models";
 /// The Weather App.
 const App: React.FC = () => {
   const [location, setLocation] = useState<ILocationData | undefined>();
-  const [pexelData, setPexelData] = useState<IPexelData | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<
+    IPexelData["photos"][number] | null
+  >(null);
   const [installPrompt, setInstallPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
@@ -45,10 +47,15 @@ const App: React.FC = () => {
         const photoResponse: IPexelData | null =
           await PexelClient.getRandomImage(
             geoLocation
-              ? `${geoLocation.address.city}, ${geoLocation.address.state} scenic urban landscape park`
+              ? `${geoLocation.address.city}, ${geoLocation.address.state} scenic landscape`
               : "weather",
           );
-        setPexelData(photoResponse);
+        if (photoResponse?.photos.length) {
+          const randomIndex = Math.floor(
+            Math.random() * photoResponse.photos.length,
+          );
+          setSelectedPhoto(photoResponse.photos[randomIndex]);
+        }
       } catch (e) {
         console.error("App: createScene threw", e);
         return;
@@ -100,7 +107,9 @@ const App: React.FC = () => {
     <div
       className="app-shell relative bg-gray-500"
       style={{
-        backgroundImage: `url(${pexelData?.photos[0]?.src.portrait})`,
+        backgroundImage: selectedPhoto
+          ? `url(${selectedPhoto.src.portrait})`
+          : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -133,7 +142,7 @@ const App: React.FC = () => {
       )}
       <Weather
         location={location}
-        photographer={pexelData?.photos[0]?.photographer}
+        photographer={selectedPhoto?.photographer}
       />
     </div>
   );
