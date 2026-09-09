@@ -83,7 +83,7 @@ const App: React.FC = () => {
       }}
     >
       <header className="flex h-12 shrink-0 items-center justify-between bg-black/70 px-4 text-white">
-        <h1 className="font-bold">Simply Weather</h1>
+        <h1 className="font-bold">My Forecast</h1>
         {installPrompt && (
           <button
             className="rounded bg-white/90 px-3 py-1 text-sm font-semibold text-black hover:bg-white"

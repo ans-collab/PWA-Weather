@@ -17,10 +17,10 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
 
   useEffect(() => {
     if (!location) {
-      setLoading(false);
-      setError(
-        "Location access is unavailable. Enable location access to view local weather.",
-      );
+      // setLoading(false);
+      // setError(
+      //   "Location access is unavailable. Enable location access to view local weather.",
+      // );
       return;
     }
 
@@ -76,10 +76,32 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
         )}
         {loading && (
           <div
-            className="text-4xl p-8 text-blue-600 bold rounded-2xl"
-            style={{ backgroundColor: "rgba(255, 255, 255, 0.6)" }}
+            className="p-8 text-white bold rounded-2xl"
+            style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
           >
-            Loading weather...
+            <div
+              className="flex items-center justify-center gap-5 rounded-2xl p-8 text-blue-600"
+              role="status"
+              style={{ backgroundColor: "transparent" }}
+            >
+              <div
+                className={`flex items-center justify-center gap-4 text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
+              >
+                <div className="relative h-16 w-16 animate-[spin_4s_linear_infinite]">
+                  {[0, 45, 90, 135, 180, 225, 270, 315].map((rotation) => (
+                    <div
+                      className="absolute inset-0"
+                      key={rotation}
+                      style={{ transform: `rotate(${rotation}deg)` }}
+                    >
+                      <div className="mx-auto h-4 w-2 rounded-full bg-amber-400" />
+                    </div>
+                  ))}
+                  <div className="absolute inset-0 m-auto h-10 w-10 rounded-full bg-amber-300 shadow-[0_0_0_5px_rgba(251,191,36,0.2)]" />
+                </div>
+                <span className="text-2xl font-bold">Loading weather...</span>
+              </div>
+            </div>
           </div>
         )}
         {error && (
@@ -140,7 +162,7 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
                 <div
                   className={`mb-3 text-lg md:text-xl ${textColor} text-shadow-lg text-shadow-black font-bold`}
                 >
-                  This Week's Forecast
+                  My Week's Forecast
                 </div>
                 <div className="grid grid-cols-1 gap-1 lg:grid-cols-7 lg:gap-3">
                   {weather.daily.time.slice(0, 7).map((date, index) => (
@@ -174,14 +196,14 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
         )}
       </div>
 
-      <div className="flex w-full shrink-0 flex-row justify-between">
-          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
-            {__APP_VERSION__}
-          </div>
-          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
-            Weather provided by Open-Meteo
-          </div>
+      <div className="flex w-full shrink-0 flex-row justify-between text-md">
+        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+          {__APP_VERSION__}
         </div>
+        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+          Weather provided by Open-Meteo
+        </div>
+      </div>
     </div>
   );
 };
