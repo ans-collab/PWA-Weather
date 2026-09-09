@@ -11,6 +11,7 @@ const App: React.FC = () => {
   const [pexelData, setPexelData] = useState<IPexelData | null>(null);
   const [installPrompt, setInstallPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
+  const [shareMessage, setShareMessage] = useState<string | null>(null);
 
   // constructor
   useEffect(() => {
@@ -73,6 +74,28 @@ const App: React.FC = () => {
     setInstallPrompt(null);
   };
 
+  const shareApp = async () => {
+    const shareData = {
+      title: "My Forecast",
+      text: "Check your local weather with My Forecast.",
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+
+      await navigator.clipboard.writeText(shareData.url);
+      setShareMessage("Link copied");
+    } catch (error) {
+      if ((error as DOMException).name !== "AbortError") {
+        setShareMessage("Unable to share");
+      }
+    }
+  };
+
   return (
     <div
       className="app-shell relative bg-gray-500"
@@ -84,16 +107,30 @@ const App: React.FC = () => {
     >
       <header className="flex h-12 shrink-0 items-center justify-between bg-black/70 px-4 text-white">
         <h1 className="font-bold">My Forecast</h1>
-        {installPrompt && (
+        <div className="flex items-center gap-2">
           <button
             className="rounded bg-white/90 px-3 py-1 text-sm font-semibold text-black hover:bg-white"
-            onClick={installApp}
+            onClick={shareApp}
             type="button"
           >
-            Install app
+            Share
           </button>
-        )}
+          {installPrompt && (
+            <button
+              className="rounded bg-white/90 px-3 py-1 text-sm font-semibold text-black hover:bg-white"
+              onClick={installApp}
+              type="button"
+            >
+              Install app
+            </button>
+          )}
+        </div>
       </header>
+      {shareMessage && (
+        <div className="absolute right-4 top-14 z-10 rounded bg-black/75 px-3 py-2 text-sm text-white">
+          {shareMessage}
+        </div>
+      )}
       <Weather
         location={location}
         photographer={pexelData?.photos[0]?.photographer}
