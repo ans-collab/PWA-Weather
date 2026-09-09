@@ -32,6 +32,8 @@ export class WeatherClient {
           temperature_unit: "fahrenheit",
           wind_speed_unit: "mph",
           timezone: "auto",
+          forecast_days: "7",
+          forecast_hours: "12"
         });
 
         const response = await fetch(

@@ -143,6 +143,7 @@ const App: React.FC = () => {
       <Weather
         location={location}
         photographer={selectedPhoto?.photographer}
+        description={selectedPhoto?.alt}
       />
     </div>
   );

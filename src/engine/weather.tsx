@@ -7,6 +7,7 @@ import { getWeatherCondition, IWeatherData } from "./weather.models";
 interface WeatherProps {
   location?: ILocationData;
   photographer?: string;
+  description?: string;
 }
 
 const WeatherAnimation = ({ weatherCode }: { weatherCode: number }) => {
@@ -29,17 +30,18 @@ const WeatherAnimation = ({ weatherCode }: { weatherCode: number }) => {
 
 const formatForecastDate = (date: string) => {
   const forecastDate = new Date(`${date}T12:00:00`);
-  const month = forecastDate.toLocaleDateString("en-US", { month: "short" });
-  const formattedMonth = month === "Sep" ? "Sept" : month;
+  const month = String(forecastDate.getMonth() + 1).padStart(2, "0");
+  const day = String(forecastDate.getDate()).padStart(2, "0");
 
-  return `${formattedMonth} ${forecastDate.getDate()}, ${forecastDate.getFullYear()}`;
+  return `${month}/${day}`;
 };
 
-export const Weather = ({ location, photographer }: WeatherProps) => {
+export const Weather = ({ location, photographer, description }: WeatherProps) => {
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<IWeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const textColor = "text-white";
+  const panelBackgroundColor = "rgba(18, 40, 104, 0.82)";
 
   useEffect(() => {
     if (!location) {
@@ -95,16 +97,17 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
   return (
     <div className="overflow-y-auto">
       <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start p-3 m:p-10">
-        {photographer && (
-          <div className="absolute left-[6px] top-[2px] z-10 rounded bg-black/60 px-2 py-1 text-xs text-white">
-            Photo by {photographer}
+        {!loading && photographer && (
+          <div className="absolute right-[15px] top-[20px] rounded bg-black/60 px-2 py-1 text-xs text-white text-right w-[40%]">
+            <div className="text-left mb-[5px] text-sm">"{description}"</div>
+            <div>Photo by {photographer} from pexels.com</div>
           </div>
         )}
         {loading && (
           <div className="fixed inset-0 z-20 flex items-center justify-center">
             <div
               className="p-8 text-white bold rounded-2xl"
-              style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
+              style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
                 className="flex items-center justify-center gap-5 rounded-2xl p-8 text-blue-600"
@@ -135,7 +138,7 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
         {error && (
           <div
             className="p-8 text-white bold rounded-2xl"
-            style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
+            style={{ backgroundColor: panelBackgroundColor }}
           >
             <div className="text-base">Weather is not available.</div>
             <div className="text-3xl">{error}</div>
@@ -143,9 +146,10 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
         )}
         {!loading && !error && (
           <>
+            {/* Top panel */}
             <div
-              className={`p-3 md:p-8 bold mt-5 rounded-2xl w-full md:w-[40%]`}
-              style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
+              className={`p-6 bold mt-0 rounded-2xl w-[40%] min-w-[350px] z-10`}
+              style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
                 className={`text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
@@ -156,7 +160,7 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
               </div>
               {weather ? (
                 <div className="mt-5 text-start text-white">
-                  <div className="text-3xl md:text-6xl text-shadow-lg text-shadow-black font-bold">
+                  <div className="text-6xl text-shadow-lg text-shadow-black font-bold">
                     {weather.current.temperature_2m}&deg;F
                   </div>
                   <div
@@ -190,30 +194,80 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
                 <div className="mt-5 text-2xl">Weather data unavailable</div>
               )}
             </div>
+
+            {/* Today's Forecast panel */}
             {weather && (
               <div
-                className={`p-3 md:p-8 bold w-full rounded-2xl mt-2`}
-                style={{ backgroundColor: "rgba(34, 69, 172, 0.71)" }}
+                className={`p-6 bold rounded-2xl mt-2 w-full`}
+                style={{ backgroundColor: panelBackgroundColor }}
               >
                 <div
                   className={`mb-3 text-lg md:text-xl ${textColor} text-shadow-lg text-shadow-black font-bold`}
                 >
-                  My Week's Forecast
+                  Hourly Forecast
                 </div>
-                <div className="grid grid-cols-1 gap-1 lg:grid-cols-7 lg:gap-3">
-                  {weather.daily.time.slice(0, 7).map((date, index) => (
+                <div className="flex flex-row gap-2 overflow-x-auto pb-3">
+                  {weather.hourly.time.slice(0, 24).map((date, index) => (
                     <div
-                      className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-xl bg-black/60 p-3 text-left lg:block lg:text-center"
+                      className="flex flex-col shrink-0 items-center gap-1 rounded-xl bg-black/60 p-2 text-left lg:block w-[150px]"
                       key={date}
                     >
-                      <div className="flex flex-col lg:block">
+                      <div className="flex flex-row justify-beween gap-2">
+                        <div className={`font-bold ${textColor}`}>
+                          {new Date(date).toLocaleTimeString("en-US", {
+                            hour: "numeric",
+                          })}
+                        </div>
+                      </div>
+                      <div className="w-full justify-self-center lg:mx-auto">
+                        <WeatherAnimation
+                          weatherCode={weather.hourly.weather_code[index]}
+                        />
+                      </div>
+                      <div className={`font-bold ${textColor} lg:mt-1`}>
+                        {
+                          getWeatherCondition(
+                            weather.hourly.weather_code[index],
+                          ).name
+                        }
+                      </div>
+                      <div className={`font-bold ${textColor} lg:mt-1`}>
+                        {weather.hourly.temperature_2m[index]}&deg;F
+                      </div>
+                      <div className={`font-bold ${textColor} lg:mt-1`}>
+                        Rain {weather.hourly.precipitation_probability[index]}%
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 7 Day Forecast panel */}
+            {weather && (
+              <div
+                className={`p-6 bold rounded-2xl mt-2 w-full`}
+                style={{ backgroundColor: panelBackgroundColor }}
+              >
+                <div
+                  className={`mb-3 text-lg md:text-xl ${textColor} text-shadow-lg text-shadow-black font-bold`}
+                >
+                  7 Day Forecast
+                </div>
+                <div className="flex flex-row gap-2 overflow-x-auto pb-3">
+                  {weather.daily.time.slice(0, 7).map((date, index) => (
+                    <div
+                      className="flex flex-col shrink-0 items-center gap-1 rounded-xl bg-black/60 p-2 text-left lg:block w-[150px]"
+                      key={date}
+                    >
+                      <div className="flex flex-row justify-beween gap-2">
                         <div className={`font-bold ${textColor}`}>
                           {new Date(`${date}T12:00:00`).toLocaleDateString(
                             undefined,
                             { weekday: "short" },
                           )}
                         </div>
-                        <div className={`text-sm ${textColor}`}>
+                        <div className={`text-xs ${textColor}`}>
                           {formatForecastDate(date)}
                         </div>
                       </div>
@@ -221,6 +275,12 @@ export const Weather = ({ location, photographer }: WeatherProps) => {
                         <WeatherAnimation
                           weatherCode={weather.daily.weather_code[index]}
                         />
+                      </div>
+                      <div className={`font-bold ${textColor} lg:mt-1`}>
+                        {
+                          getWeatherCondition(weather.daily.weather_code[index])
+                            .name
+                        }
                       </div>
                       <div className={`font-bold ${textColor} lg:mt-1`}>
                         {weather.daily.temperature_2m_max[index]}&deg; /{" "}
