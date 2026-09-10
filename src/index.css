@@ -239,11 +239,23 @@ canvas {
   background: repeating-linear-gradient(105deg, transparent 0 8px, #38bdf8 9px 11px, transparent 12px 18px);
   animation: weather-fall 700ms linear infinite;
 }
+.weather-animation--light-rain .weather-animation__precipitation,
+.weather-animation--rain .weather-animation__precipitation,
+.weather-animation--heavy-rain .weather-animation__precipitation,
+.weather-animation--light-rain-night .weather-animation__precipitation,
+.weather-animation--rain-night .weather-animation__precipitation,
+.weather-animation--heavy-rain-night .weather-animation__precipitation {
+  animation: weather-rain-fall 700ms linear infinite;
+}
 .weather-animation--heavy-rain .weather-animation__precipitation,
 .weather-animation--heavy-rain-night .weather-animation__precipitation {
   inset: 30px 7px 0;
   background: repeating-linear-gradient(105deg, transparent 0 5px, #0284c7 6px 9px, transparent 10px 14px);
-  animation-duration: 420ms;
+  animation: weather-rain-fall 420ms linear infinite;
+}
+.weather-animation--light-rain .weather-animation__precipitation,
+.weather-animation--light-rain-night .weather-animation__precipitation {
+  animation-duration: 1050ms;
 }
 .weather-animation--light-snow .weather-animation__precipitation,
 .weather-animation--snow .weather-animation__precipitation,
@@ -300,6 +312,10 @@ canvas {
   }
 }
 @keyframes weather-fall { to { transform: translateY(8px); } }
+@keyframes weather-rain-fall {
+  from { background-position: 0 -24px; }
+  to { background-position: 0 24px; }
+}
 @keyframes weather-snowfall { to { transform: translate(5px, 10px); } }
 @keyframes weather-fog-slide { to { transform: translateX(8px); } }
 @keyframes weather-lightning { 0%, 46%, 52%, 100% { opacity: 0; } 48%, 50% { opacity: 1; } }
