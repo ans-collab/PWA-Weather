@@ -47,7 +47,7 @@ const App: React.FC = () => {
         const photoResponse: IPexelData | null =
           await PexelClient.getRandomImage(
             geoLocation
-              ? `${geoLocation.address.city}, ${geoLocation.address.state} scenic landscape`
+              ? `${geoLocation.address.city}, ${geoLocation.address.state} majestic scenic landscape`
               : "weather",
           );
         if (photoResponse?.photos.length) {
