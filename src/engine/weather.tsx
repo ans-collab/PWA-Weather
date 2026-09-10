@@ -10,8 +10,19 @@ interface WeatherProps {
   description?: string;
 }
 
-const WeatherAnimation = ({ weatherCode }: { weatherCode: number }) => {
-  const condition = getWeatherCondition(weatherCode);
+const isNightTime = (timestamp: string) => {
+  const hour = Number(timestamp.slice(11, 13));
+  return hour < 6 || hour >= 18;
+};
+
+const WeatherAnimation = ({
+  weatherCode,
+  isNight = false,
+}: {
+  weatherCode: number;
+  isNight?: boolean;
+}) => {
+  const condition = getWeatherCondition(weatherCode, isNight);
 
   return (
     <div
@@ -174,9 +185,15 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
                     <div className="my-4 flex items-center gap-4">
                       <WeatherAnimation
                         weatherCode={weather.current.weather_code}
+                        isNight={isNightTime(weather.current.time)}
                       />
                       <span className="text-2xl">
-                        {getWeatherCondition(weather.current.weather_code).name}
+                        {
+                          getWeatherCondition(
+                            weather.current.weather_code,
+                            isNightTime(weather.current.time),
+                          ).name
+                        }
                       </span>
                     </div>
                     <div className="mt-2 text-xl">
@@ -227,12 +244,14 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
                       <div className="w-full justify-self-center lg:mx-auto">
                         <WeatherAnimation
                           weatherCode={weather.hourly.weather_code[index]}
+                          isNight={isNightTime(date)}
                         />
                       </div>
                       <div className={`font-bold ${textColor} lg:mt-1`}>
                         {
                           getWeatherCondition(
                             weather.hourly.weather_code[index],
+                            isNightTime(date),
                           ).name
                         }
                       </div>

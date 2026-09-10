@@ -58,132 +58,161 @@ export const weatherConditions = {
   CLEAR: {
     name: "Sunny",
     icon: "weather-animation--sunny",
+    nightName: "Clear Night",
+    nightIcon: "weather-animation--clear-night",
   },
 
   MOSTLY_CLEAR: {
     name: "Mostly Sunny",
     icon: "weather-animation--mostly-sunny",
+    nightName: "Mostly Clear Night",
+    nightIcon: "weather-animation--mostly-clear-night",
   },
 
   PARTLY_CLOUDY: {
     name: "Partly Cloudy",
     icon: "weather-animation--partly-cloudy",
+    nightName: "Partly Cloudy Night",
+    nightIcon: "weather-animation--partly-cloudy-night",
   },
 
   CLOUDY: {
     name: "Cloudy",
     icon: "weather-animation--cloudy",
+    nightName: "Cloudy Night",
+    nightIcon: "weather-animation--cloudy-night",
   },
 
   FOGGY: {
     name: "Foggy",
     icon: "weather-animation--foggy",
+    nightName: "Foggy Night",
+    nightIcon: "weather-animation--foggy-night",
   },
 
   LIGHT_RAIN: {
     name: "Light Rain",
     icon: "weather-animation--light-rain",
+    nightName: "Light Rain at Night",
+    nightIcon: "weather-animation--light-rain-night",
   },
 
   RAIN: {
     name: "Rain",
     icon: "weather-animation--rain",
+    nightName: "Rain at Night",
+    nightIcon: "weather-animation--rain-night",
   },
 
   HEAVY_RAIN: {
     name: "Heavy Rain",
     icon: "weather-animation--heavy-rain",
+    nightName: "Heavy Rain at Night",
+    nightIcon: "weather-animation--heavy-rain-night",
   },
 
   LIGHT_SNOW: {
     name: "Light Snow",
     icon: "weather-animation--light-snow",
+    nightName: "Light Snow at Night",
+    nightIcon: "weather-animation--light-snow-night",
   },
 
   SNOW: {
     name: "Snow",
     icon: "weather-animation--snow",
+    nightName: "Snow at Night",
+    nightIcon: "weather-animation--snow-night",
   },
 
   HEAVY_SNOW: {
     name: "Heavy Snow",
     icon: "weather-animation--heavy-snow",
+    nightName: "Heavy Snow at Night",
+    nightIcon: "weather-animation--heavy-snow-night",
   },
 
   THUNDERSTORM: {
     name: "Thunderstorm",
     icon: "weather-animation--thunderstorm",
+    nightName: "Thunderstorm at Night",
+    nightIcon: "weather-animation--thunderstorm-night",
   },
 };
 
-export const getWeatherCondition = (weatherCode: number) => {
+export const getWeatherCondition = (weatherCode: number, isNight = false) => {
+  const getCondition = (condition: (typeof weatherConditions)[keyof typeof weatherConditions]) =>
+    isNight
+      ? { name: condition.nightName, icon: condition.nightIcon }
+      : { name: condition.name, icon: condition.icon };
+
   switch (weatherCode) {
     // Clear
     case 0:
-      return weatherConditions.CLEAR;
+      return getCondition(weatherConditions.CLEAR);
 
     // Mainly clear
     case 1:
-      return weatherConditions.MOSTLY_CLEAR;
+      return getCondition(weatherConditions.MOSTLY_CLEAR);
 
     // Partly cloudy
     case 2:
-      return weatherConditions.PARTLY_CLOUDY;
+      return getCondition(weatherConditions.PARTLY_CLOUDY);
 
     // Overcast
     case 3:
-      return weatherConditions.CLOUDY;
+      return getCondition(weatherConditions.CLOUDY);
 
     // Fog
     case 45:
     case 48:
-      return weatherConditions.FOGGY;
+      return getCondition(weatherConditions.FOGGY);
 
     // Light drizzle
     case 51:
     case 53:
     case 56:
-      return weatherConditions.LIGHT_RAIN;
+      return getCondition(weatherConditions.LIGHT_RAIN);
 
     // Heavy drizzle
     case 55:
     case 57:
-      return weatherConditions.RAIN;
+      return getCondition(weatherConditions.RAIN);
 
     // Light rain
     case 61:
-      return weatherConditions.LIGHT_RAIN;
+      return getCondition(weatherConditions.LIGHT_RAIN);
 
     // Moderate rain
     case 63:
     case 66:
-      return weatherConditions.RAIN;
+      return getCondition(weatherConditions.RAIN);
 
     // Heavy rain
     case 65:
     case 67:
-      return weatherConditions.HEAVY_RAIN;
+      return getCondition(weatherConditions.HEAVY_RAIN);
 
     // Light snow
     case 71:
     case 77:
     case 85:
-      return weatherConditions.LIGHT_SNOW;
+      return getCondition(weatherConditions.LIGHT_SNOW);
 
     // Moderate snow
     case 73:
-      return weatherConditions.SNOW;
+      return getCondition(weatherConditions.SNOW);
 
     // Heavy snow
     case 75:
     case 86:
-      return weatherConditions.HEAVY_SNOW;
+      return getCondition(weatherConditions.HEAVY_SNOW);
 
     // Thunderstorms
     case 95:
     case 96:
     case 99:
-      return weatherConditions.THUNDERSTORM;
+      return getCondition(weatherConditions.THUNDERSTORM);
 
     // Unknown code
     default:

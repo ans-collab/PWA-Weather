@@ -150,10 +150,13 @@ canvas {
 }
 .weather-animation--sunny .weather-animation__cloud,
 .weather-animation--mostly-sunny .weather-animation__cloud,
-.weather-animation--partly-cloudy .weather-animation__cloud {
+.weather-animation--partly-cloudy .weather-animation__cloud,
+.weather-animation--mostly-clear-night .weather-animation__cloud,
+.weather-animation--partly-cloudy-night .weather-animation__cloud {
   display: block;
 }
-.weather-animation--sunny .weather-animation__cloud {
+.weather-animation--sunny .weather-animation__cloud,
+.weather-animation--clear-night .weather-animation__cloud {
   display: none;
 }
 .weather-animation--cloudy,
@@ -164,8 +167,26 @@ canvas {
 .weather-animation--light-snow,
 .weather-animation--snow,
 .weather-animation--heavy-snow,
-.weather-animation--thunderstorm {
+.weather-animation--thunderstorm,
+.weather-animation--cloudy-night,
+.weather-animation--foggy-night,
+.weather-animation--light-rain-night,
+.weather-animation--rain-night,
+.weather-animation--heavy-rain-night,
+.weather-animation--light-snow-night,
+.weather-animation--snow-night,
+.weather-animation--heavy-snow-night,
+.weather-animation--thunderstorm-night {
   background: linear-gradient(180deg, #64748b 0%, #cbd5e1 100%);
+}
+.weather-animation[class*="-night"] {
+  background: linear-gradient(180deg, #172554 0%, #334155 100%);
+}
+.weather-animation[class*="-night"] .weather-animation__sun {
+  top: 11px;
+  right: 18px;
+  background: #f8fafc;
+  box-shadow: 0 0 0 5px rgba(248, 250, 252, 0.16), 0 0 18px rgba(248, 250, 252, 0.65);
 }
 .weather-animation--cloudy .weather-animation__sun,
 .weather-animation--foggy .weather-animation__sun,
@@ -181,7 +202,11 @@ canvas {
 .weather-animation--foggy .weather-animation__cloud {
   bottom: 28px;
 }
-.weather-animation--foggy .weather-animation__fog {
+.weather-animation--foggy-night .weather-animation__cloud {
+  bottom: 28px;
+}
+.weather-animation--foggy .weather-animation__fog,
+.weather-animation--foggy-night .weather-animation__fog {
   display: block;
   position: absolute;
   left: 7px;
@@ -198,33 +223,46 @@ canvas {
 .weather-animation--heavy-rain .weather-animation__precipitation,
 .weather-animation--light-snow .weather-animation__precipitation,
 .weather-animation--snow .weather-animation__precipitation,
-.weather-animation--heavy-snow .weather-animation__precipitation {
+.weather-animation--heavy-snow .weather-animation__precipitation,
+.weather-animation--light-rain-night .weather-animation__precipitation,
+.weather-animation--rain-night .weather-animation__precipitation,
+.weather-animation--heavy-rain-night .weather-animation__precipitation,
+.weather-animation--light-snow-night .weather-animation__precipitation,
+.weather-animation--snow-night .weather-animation__precipitation,
+.weather-animation--heavy-snow-night .weather-animation__precipitation {
   display: block;
   position: absolute;
   inset: 32px 15px 0;
   background: repeating-linear-gradient(105deg, transparent 0 8px, #38bdf8 9px 11px, transparent 12px 18px);
   animation: weather-fall 700ms linear infinite;
 }
-.weather-animation--heavy-rain .weather-animation__precipitation {
+.weather-animation--heavy-rain .weather-animation__precipitation,
+.weather-animation--heavy-rain-night .weather-animation__precipitation {
   inset: 30px 7px 0;
   background: repeating-linear-gradient(105deg, transparent 0 5px, #0284c7 6px 9px, transparent 10px 14px);
   animation-duration: 420ms;
 }
 .weather-animation--light-snow .weather-animation__precipitation,
 .weather-animation--snow .weather-animation__precipitation,
-.weather-animation--heavy-snow .weather-animation__precipitation {
+.weather-animation--heavy-snow .weather-animation__precipitation,
+.weather-animation--light-snow-night .weather-animation__precipitation,
+.weather-animation--snow-night .weather-animation__precipitation,
+.weather-animation--heavy-snow-night .weather-animation__precipitation {
   background: radial-gradient(circle, #fff 0 3px, transparent 4px) 0 0 / 15px 13px;
   animation: weather-snowfall 1.8s linear infinite;
 }
-.weather-animation--heavy-snow .weather-animation__precipitation {
+.weather-animation--heavy-snow .weather-animation__precipitation,
+.weather-animation--heavy-snow-night .weather-animation__precipitation {
   background-size: 11px 11px;
   animation-duration: 1.1s;
 }
-.weather-animation--thunderstorm .weather-animation__cloud {
+.weather-animation--thunderstorm .weather-animation__cloud,
+.weather-animation--thunderstorm-night .weather-animation__cloud {
   background: #334155;
   box-shadow: 13px -10px 0 -3px #334155, 27px -5px 0 -5px #334155;
 }
-.weather-animation--thunderstorm .weather-animation__lightning {
+.weather-animation--thunderstorm .weather-animation__lightning,
+.weather-animation--thunderstorm-night .weather-animation__lightning {
   display: block;
   position: absolute;
   left: 35px;
