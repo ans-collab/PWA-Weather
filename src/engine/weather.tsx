@@ -26,7 +26,7 @@ const WeatherAnimation = ({
 
   return (
     <div
-      className={`weather-animation ${condition.icon}`}
+      className={`w-full weather-animation ${condition.icon}`}
       role="img"
       aria-label={condition.name}
     >
@@ -168,7 +168,7 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
               style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
-                className={`text-lg text-left ${textColor} text-shadow-lg text-shadow-black`}
+                className={`text-xl text-left ${textColor} text-shadow-lg text-shadow-black`}
               >
                 {location
                   ? `${location.address.city}, ${location.address.state}`
@@ -176,13 +176,18 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
               </div>
               {weather ? (
                 <div className="mt-5 text-start text-white">
-                  <div className="text-6xl text-shadow-lg text-shadow-black font-bold">
-                    {weather.current.temperature_2m}&deg;F
+                  <div className="flex flex-row gap-3 items-center">
+                    <div className="text-6xl text-shadow-lg text-shadow-black font-bold">
+                      {weather.current.temperature_2m}&deg;F
+                    </div>
+                    <div className="text-lg text-shadow-lg text-shadow-black">
+                      Feels like {weather.current.apparent_temperature}&deg;F
+                    </div>
                   </div>
                   <div
                     className={`bold ${textColor} text-shadow-lg text-shadow-black font-bold`}
                   >
-                    <div className="my-4 flex items-center gap-4">
+                    <div className="my-4 flex items-center justify-between gap-5">
                       <WeatherAnimation
                         weatherCode={weather.current.weather_code}
                         isNight={isNightTime(weather.current.time)}
@@ -196,19 +201,16 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
                         }
                       </span>
                     </div>
-                    <div className="mt-2 text-xl">
-                      Feels like {weather.current.apparent_temperature}&deg;F
-                    </div>
                     <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-lg">
                       <div>
                         Humidity: {weather.current.relative_humidity_2m}%
                       </div>
+                      <div></div>
                       <div>Wind: {weather.current.wind_speed_10m} mph</div>
-                      <div>Weather code: {weather.current.weather_code}</div>
                       <div>
                         Updated:{" "}
                         {new Date(weather.current.time).toLocaleTimeString()}
-                      </div>
+                      </div>                      
                     </div>
                   </div>
                 </div>
