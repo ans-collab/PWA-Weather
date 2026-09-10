@@ -41,7 +41,7 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
   const [weather, setWeather] = useState<IWeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const textColor = "text-white";
-  const panelBackgroundColor = "rgba(18, 40, 104, 0.82)";
+  const panelBackgroundColor = "rgba(79, 102, 186, 0.47)";
 
   useEffect(() => {
     if (!location) {
@@ -94,47 +94,51 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
     initialize();
   }, [location]);
 
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-20 flex items-center justify-center">
+        <div
+          className="p-8 text-white bold rounded-2xl"
+          style={{ backgroundColor: panelBackgroundColor }}
+        >
+          <div
+            className="flex items-center justify-center gap-5 rounded-2xl p-8 text-blue-600"
+            role="status"
+            style={{ backgroundColor: "transparent" }}
+          >
+            <div
+              className={`flex items-center justify-center gap-4 text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
+            >
+              <div className="relative h-16 w-16 animate-[spin_4s_linear_infinite]">
+                {[0, 45, 90, 135, 180, 225, 270, 315].map((rotation) => (
+                  <div
+                    className="absolute inset-0"
+                    key={rotation}
+                    style={{ transform: `rotate(${rotation}deg)` }}
+                  >
+                    <div className="mx-auto h-4 w-2 rounded-full bg-amber-400" />
+                  </div>
+                ))}
+                <div className="absolute inset-0 m-auto h-10 w-10 rounded-full bg-amber-300 shadow-[0_0_0_5px_rgba(251,191,36,0.2)]" />
+              </div>
+              <span className="text-2xl font-bold">Loading weather...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-y-auto">
       <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start p-3 m:p-10">
-        {!loading && photographer && (
+        {photographer && (
           <div className="absolute right-[15px] top-[20px] rounded bg-black/60 px-2 py-1 text-xs text-white text-right w-[40%]">
             <div className="text-left mb-[5px] text-sm">"{description}"</div>
             <div>Photo by {photographer} from pexels.com</div>
           </div>
         )}
-        {loading && (
-          <div className="fixed inset-0 z-20 flex items-center justify-center">
-            <div
-              className="p-8 text-white bold rounded-2xl"
-              style={{ backgroundColor: panelBackgroundColor }}
-            >
-              <div
-                className="flex items-center justify-center gap-5 rounded-2xl p-8 text-blue-600"
-                role="status"
-                style={{ backgroundColor: "transparent" }}
-              >
-                <div
-                  className={`flex items-center justify-center gap-4 text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
-                >
-                  <div className="relative h-16 w-16 animate-[spin_4s_linear_infinite]">
-                    {[0, 45, 90, 135, 180, 225, 270, 315].map((rotation) => (
-                      <div
-                        className="absolute inset-0"
-                        key={rotation}
-                        style={{ transform: `rotate(${rotation}deg)` }}
-                      >
-                        <div className="mx-auto h-4 w-2 rounded-full bg-amber-400" />
-                      </div>
-                    ))}
-                    <div className="absolute inset-0 m-auto h-10 w-10 rounded-full bg-amber-300 shadow-[0_0_0_5px_rgba(251,191,36,0.2)]" />
-                  </div>
-                  <span className="text-2xl font-bold">Loading weather...</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+
         {error && (
           <div
             className="p-8 text-white bold rounded-2xl"
@@ -144,7 +148,8 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
             <div className="text-3xl">{error}</div>
           </div>
         )}
-        {!loading && !error && (
+
+        {!error && (
           <>
             {/* Top panel */}
             <div
@@ -152,7 +157,7 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
               style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
-                className={`text-2xl text-left ${textColor} text-shadow-lg text-shadow-black font-bold`}
+                className={`text-lg text-left ${textColor} text-shadow-lg text-shadow-black`}
               >
                 {location
                   ? `${location.address.city}, ${location.address.state}`
@@ -298,16 +303,15 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
           </>
         )}
       </div>
-      {!loading && (
-        <div className="flex w-full shrink-0 flex-row justify-between text-md">
-          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
-            {__APP_VERSION__}
-          </div>
-          <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
-            Weather provided by Open-Meteo
-          </div>
+
+      <div className="flex w-full shrink-0 flex-row justify-between text-md">
+        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+          {__APP_VERSION__}
         </div>
-      )}
+        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+          Weather provided by Open-Meteo
+        </div>
+      </div>
     </div>
   );
 };
