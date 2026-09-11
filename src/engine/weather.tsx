@@ -144,7 +144,7 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
     <div className="overflow-y-auto">
       <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start p-3 m:p-10">
         {photographer && (
-          <div className="absolute right-[15px] top-10px] rounded bg-black/60 p-3 text-xs text-white text-right w-[40%]">
+          <div className="absolute right-[15px] top-10px] rounded bg-black/60 p-3 text-xs text-white text-right w-[60%]">
             <div className="text-left mb-[5px] text-sm">"{description}"</div>
             <div>Photo by {photographer} from pexels.com</div>
           </div>

@@ -16,7 +16,7 @@ export default defineConfig({
         enabled: false,
       },
       manifest: {
-        name: `My Forecast`,
+        name: `Forecast`,
         id: `Forecast`,
         short_name: `Forecast`,
         description: 'This is your local weather app with no ads, no fuss, no mess. It just works. It nothing nothing more, and nothing less. Expect incremental updates for added enhancements.',
