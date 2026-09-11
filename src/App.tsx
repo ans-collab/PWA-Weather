@@ -10,12 +10,13 @@ enum LocationPermissionState {
   NoPermission,
   PermissionGranted,
   LocatedProvided,
-};
+}
 
 /// The Weather App.
 const App: React.FC = () => {
   const [location, setLocation] = useState<ILocationData | undefined>();
-  const [locationPermission, setLocationPermission] = useState<LocationPermissionState>(LocationPermissionState.None);
+  const [locationPermission, setLocationPermission] =
+    useState<LocationPermissionState>(LocationPermissionState.None);
   const [locationCity, setLocationCity] = useState<string | null>(null);
   const [locationState, setLocationState] = useState<string | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<
@@ -28,7 +29,11 @@ const App: React.FC = () => {
   // constructor
   useEffect(() => {
     LocationClient.isGeolocationEnabled().then((enabled) => {
-      setLocationPermission(enabled ? LocationPermissionState.PermissionGranted : LocationPermissionState.NoPermission);
+      setLocationPermission(
+        enabled
+          ? LocationPermissionState.PermissionGranted
+          : LocationPermissionState.NoPermission,
+      );
     });
   }, []);
 
@@ -38,9 +43,17 @@ const App: React.FC = () => {
       if (timeoutId) {
         clearTimeout(timeoutId.current);
       }
-      setTimeout(() => {
-        setLocationPermission(LocationPermissionState.LocatedProvided);
-      }, 500);
+      setTimeout(async () => {
+        const _location = await LocationClient.getGeoLocationByCityAndState(
+          locationCity,
+          locationState,
+        );
+        if (_location && _location.latitude && _location.latitude) {
+          loadScenicPhoto(_location);
+          setLocation(_location);
+          setLocationPermission(LocationPermissionState.LocatedProvided);
+        }
+      }, 1500);
     }
   }, [locationCity, locationState]);
 
@@ -59,42 +72,7 @@ const App: React.FC = () => {
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
 
-    const fetchScenicPhoto = async () => {
-      try {
-        let geoLocation: ILocationData | undefined;
-
-        // load location data.
-        const currentLocation = await LocationClient.getCurrentLocation();
-        if (currentLocation) {
-          geoLocation = await LocationClient.getGeoLocation(
-            currentLocation.coords.longitude.toString(),
-            currentLocation.coords.latitude.toString(),
-          );
-
-          geoLocation.longitude = currentLocation.coords.longitude;
-          geoLocation.latitude = currentLocation.coords.latitude;
-          setLocation(geoLocation);
-        }
-
-        // load scenic photo.
-        const photoResponse: IPexelData | null =
-          await PexelClient.getRandomImage(
-            geoLocation
-              ? `${geoLocation.address.city}, ${geoLocation.address.state} majestic scenic landscape`
-              : "weather",
-          );
-        if (photoResponse?.photos.length) {
-          const randomIndex = Math.floor(
-            Math.random() * photoResponse.photos.length,
-          );
-          setSelectedPhoto(photoResponse.photos[randomIndex]);
-        }
-      } catch (e) {
-        console.error("App: createScene threw", e);
-        return;
-      }
-    };
-    fetchScenicPhoto();
+    loadScenicPhoto();
 
     // destructor
     return () => {
@@ -106,11 +84,55 @@ const App: React.FC = () => {
     };
   }, [locationPermission]);
 
+  // load scenic background phoyo
+  const loadScenicPhoto = async (locationData?: ILocationData) => {
+    try {
+      let geoLocation: ILocationData | undefined;
+
+      // load location data.
+      if (!locationData) {
+        const currentLocation = await LocationClient.getCurrentLocation();
+        if (currentLocation) {
+          geoLocation = await LocationClient.getGeoLocation(
+            currentLocation.coords.longitude.toString(),
+            currentLocation.coords.latitude.toString(),
+          );
+
+          geoLocation.longitude = currentLocation.coords.longitude;
+          geoLocation.latitude = currentLocation.coords.latitude;
+          setLocation(geoLocation);
+        }
+      }
+
+      const _city = locationData ? locationData.address.city : geoLocation?.address.city;
+      const _state = locationData ? locationData.address.state : geoLocation?.address.state;
+
+      // load scenic photo.
+      const photoResponse: IPexelData | null = await PexelClient.getRandomImage(
+        geoLocation
+          ? `${_city}, ${_state} majestic scenic landscape`
+          : "weather",
+      );
+      if (photoResponse?.photos.length) {
+        const randomIndex = Math.floor(
+          Math.random() * photoResponse.photos.length,
+        );
+        setSelectedPhoto(photoResponse.photos[randomIndex]);
+      }
+    } catch (e) {
+      console.error("App: createScene threw", e);
+      return;
+    }
+  };
+
   const isReadyToLoadWeather = (): boolean => {
     if (locationPermission === LocationPermissionState.None) {
       return false;
     }
-    return locationPermission === LocationPermissionState.PermissionGranted || locationPermission === LocationPermissionState.LocatedProvided;
+    return (
+      locationPermission === LocationPermissionState.PermissionGranted ||
+      locationPermission === LocationPermissionState.LocatedProvided
+    );
   };
 
   const installApp = async () => {
@@ -194,12 +216,24 @@ const App: React.FC = () => {
               Provide your City, State:
             </p>
             <div className="flex flex-row items-center gap-4">
-              <input type='text' placeholder="City" className="rounded border border-gray-300 px-3 py-2 text-sm" onChange={(e) => setLocationCity(e.target.value)} />
-              <input type='text' placeholder="State" className="rounded border border-gray-300 px-3 py-2 text-sm" onChange={(e) => setLocationState(e.target.value)} />
+              <input
+                type="text"
+                placeholder="City"
+                className="rounded border border-gray-300 px-3 py-2 text-sm"
+                onChange={(e) => setLocationCity(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="State"
+                className="rounded border border-gray-300 px-3 py-2 text-sm"
+                onChange={(e) => setLocationState(e.target.value)}
+              />
             </div>
           </div>
           <p className="text-center text-sm p-10 text-gray-500">
-            You can skip this step if you enable location permission. Note: On mobile devices, you may have to enable location services on your default browser as well as your system settings.
+            You can skip this step if you enable location permission. Note: On
+            mobile devices, you may have to enable location services on your
+            default browser as well as your system settings.
           </p>
         </div>
       )}

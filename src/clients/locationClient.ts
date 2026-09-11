@@ -49,4 +49,35 @@ export class LocationClient {
             }
         };
     }
+
+    // gets the geolocation (city, state) based on the provided city and state.
+    static async getGeoLocationByCityAndState(city: string, state: string): Promise<ILocationData> {
+        const params = new URLSearchParams({
+            q: `${city}, ${state}`,
+            format: "json",
+            addressdetails: "1",
+            limit: "1"
+        });
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?${params}`);
+
+        if (!response.ok) {
+            throw new Error("Failed to get location by city and state");
+        }
+
+        const results = await response.json();
+        const data = results[0];
+        if (!data) {
+            throw new Error(`Location not found for ${city}, ${state}`);
+        }
+
+        return {
+            longitude: parseFloat(data.lon),
+            latitude: parseFloat(data.lat),
+            address: {
+                city: data.address.city || data.address.town || data.address.village || "",
+                state: data.address.state || "",
+                country: data.address.country || ""
+            }
+        };
+    }
 }

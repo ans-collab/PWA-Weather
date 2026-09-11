@@ -47,7 +47,11 @@ const formatForecastDate = (date: string) => {
   return `${month}/${day}`;
 };
 
-export const Weather = ({ location, photographer, description }: WeatherProps) => {
+export const Weather = ({
+  location,
+  photographer,
+  description,
+}: WeatherProps) => {
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<IWeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -146,7 +150,8 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
         {photographer && (
           <div className="absolute right-[15px] top-10px] rounded bg-black/60 p-3 text-xs text-white text-right w-[60%]">
             <div className="text-left mb-[5px] text-sm">"{description}"</div>
-            <div>Photo by {photographer} from pexels.com</div>
+            <div>By {photographer}</div>
+            <div>pexels.com</div>
           </div>
         )}
 
@@ -210,7 +215,7 @@ export const Weather = ({ location, photographer, description }: WeatherProps) =
                       <div>
                         Updated:{" "}
                         {new Date(weather.current.time).toLocaleTimeString()}
-                      </div>                      
+                      </div>
                     </div>
                   </div>
                 </div>
