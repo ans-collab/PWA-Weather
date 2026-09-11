@@ -15,6 +15,61 @@ export default defineConfig({
       devOptions: {
         enabled: false,
       },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.open-meteo\.com\/v1\/forecast/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'weather-api',
+              networkTimeoutSeconds: 5,
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 24,
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/api\.pexels\.com\/v1\/search/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'pexels-api',
+              networkTimeoutSeconds: 5,
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60,
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/images\.pexels\.com\//,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'pexels-images',
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/nominatim\.openstreetmap\.org\/(search|reverse)/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'geocoding',
+              networkTimeoutSeconds: 5,
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 7,
+              },
+            },
+          },
+        ],
+      },
       manifest: {
         name: `Forecast`,
         id: `Forecast`,

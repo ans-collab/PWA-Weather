@@ -15,3 +15,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 declare const __APP_VERSION__: string;
 
+interface Window {
+  __updateServiceWorker?: (reloadPage?: boolean) => Promise<void>;
+}
+

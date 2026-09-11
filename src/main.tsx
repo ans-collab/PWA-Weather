@@ -5,6 +5,16 @@ import './index.css'
 import { registerSW } from 'virtual:pwa-register'
 
 // Register the service worker for PWA behavior (auto update)
-registerSW({ immediate: true })
+const updateServiceWorker = registerSW({
+	immediate: true,
+	onNeedRefresh() {
+		window.dispatchEvent(new Event('sw-update-available'));
+	},
+	onOfflineReady() {
+		window.dispatchEvent(new Event('sw-offline-ready'));
+	},
+});
+
+window.__updateServiceWorker = updateServiceWorker;
 
 createRoot(document.getElementById('root')!).render(<App />)

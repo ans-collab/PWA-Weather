@@ -25,6 +25,19 @@ const App: React.FC = () => {
   const [installPrompt, setInstallPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+
+  useEffect(() => {
+    const handleUpdateAvailable = () => setIsUpdateAvailable(true);
+    window.addEventListener("sw-update-available", handleUpdateAvailable);
+
+    return () => {
+      window.removeEventListener(
+        "sw-update-available",
+        handleUpdateAvailable,
+      );
+    };
+  }, []);
 
   // constructor
   useEffect(() => {
@@ -226,6 +239,15 @@ const App: React.FC = () => {
               type="button"
             >
               Install app
+            </button>
+          )}
+          {isUpdateAvailable && (
+            <button
+              className="rounded bg-amber-300 px-3 py-1 text-sm font-semibold text-black hover:bg-amber-200"
+              onClick={() => window.__updateServiceWorker?.(true)}
+              type="button"
+            >
+              Update
             </button>
           )}
         </div>
