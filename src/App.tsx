@@ -77,11 +77,18 @@ const App: React.FC = () => {
             currentLocation.coords.longitude.toString(),
             currentLocation.coords.latitude.toString(),
           );
-
-          geoLocation.longitude = currentLocation.coords.longitude;
-          geoLocation.latitude = currentLocation.coords.latitude;
           setLocation(geoLocation);
         }
+      } else {
+        geoLocation = {
+          address: {
+            city: '',
+            state: '',
+            country: ''
+          },
+          longitude: locationData.longitude,
+          latitude: locationData.latitude,
+        };
       }
 
       const _city = locationData
