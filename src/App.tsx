@@ -175,11 +175,11 @@ const App: React.FC = () => {
   };
 
   const triggerChangeDetection = () => {
-    if (timeoutId) {
+    if (timeoutId.current) {
       clearTimeout(timeoutId.current);
     }
     if (locationChnageObject.City && locationChnageObject.State) {
-      setTimeout(async () => {
+      timeoutId.current = setTimeout(async () => {
         const _location = await LocationClient.getGeoLocationByCityAndState(
           locationChnageObject.City + "",
           locationChnageObject.State + "",
