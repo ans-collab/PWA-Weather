@@ -297,6 +297,7 @@ export const Weather = ({
                 <button
                   aria-label="Change location"
                   className="cursor-pointer"
+                  style={{ color: "cyan" }}
                   onClick={() => {
                     setIsChangeLocationDialogOpen(true);
                   }}
@@ -457,10 +458,7 @@ export const Weather = ({
         )}
       </div>
 
-      <div className="flex w-full shrink-0 flex-row justify-between text-md">
-        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
-          {__APP_VERSION__}
-        </div>
+      <div className="flex w-full shrink-0 flex-row justify-center text-md">
         <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
           Weather provided by Open-Meteo
         </div>
