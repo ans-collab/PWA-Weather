@@ -39,10 +39,6 @@ const App: React.FC = () => {
 
   // initialize when location permission is determined.
   useEffect(() => {
-    if (!isReadyToLoadWeather()) {
-      return;
-    }
-
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setInstallPrompt(event as BeforeInstallPromptEvent);
@@ -52,7 +48,9 @@ const App: React.FC = () => {
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
 
-    loadScenicPhoto();
+    if (locationPermission === LocationPermissionState.PermissionGranted) {
+      loadScenicPhoto();
+    }
 
     // destructor
     return () => {

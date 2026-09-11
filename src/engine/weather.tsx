@@ -31,6 +31,7 @@ const WeatherAnimation = ({
       className={`w-full weather-animation ${condition.icon}`}
       role="img"
       aria-label={condition.name}
+      style={{ borderRadius: 8, opacity: 0.88 }}
     >
       <span className="weather-animation__sun" />
       <span className="weather-animation__cloud" />
@@ -61,6 +62,7 @@ export const Weather = ({
   const [isChangeLocationDialogOpen, setIsChangeLocationDialogOpen] =
     useState(false);
   const textColor = "text-white";
+  const locationBackgroundColor = "rgba(4, 4, 5, 0.47)";
   const panelBackgroundColor = "rgba(79, 102, 186, 0.47)";
 
   useEffect(() => {
@@ -159,10 +161,7 @@ export const Weather = ({
           role="dialog"
         >
           <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-slate-900 shadow-2xl">
-            <h2
-              className="text-xl font-bold"
-              id="change-location-title"
-            >
+            <h2 className="text-xl font-bold" id="change-location-title">
               Change location?
             </h2>
             <p className="mt-2 text-sm text-slate-600">
@@ -191,14 +190,6 @@ export const Weather = ({
         </div>
       )}
       <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start p-3 m:p-10">
-        {photographer && (
-          <div className="absolute right-[15px] top-10px] rounded bg-black/60 p-3 text-xs text-white text-right w-[60%]">
-            <div className="text-left mb-[5px] text-sm">"{description}"</div>
-            <div>By {photographer}</div>
-            <div>pexels.com</div>
-          </div>
-        )}
-
         {error && (
           <div
             className="p-8 text-white bold rounded-2xl"
@@ -211,9 +202,40 @@ export const Weather = ({
 
         {!error && (
           <>
+            <div className="grid h-[60vh] w-full mb-2">
+              {photographer && (
+                <div className="sticky top-2 z-10 col-start-1 row-start-1 ml-auto h-fit w-[60%] self-start rounded bg-black/60 p-3 text-right text-xs text-white">
+                  <div className="mb-[5px] text-left text-sm">
+                    "{description}"
+                  </div>
+                  <div>By {photographer}</div>
+                  <div>pexels.com</div>
+                </div>
+              )}
+
+              {/* Location display */}
+              {/* <div
+                className={`col-start-1 row-start-1 flex h-full w-full flex-row items-center justify-center text-center text-xl ${textColor}`}
+              >
+                {location
+                  ? `${location.address.city}, ${location.address.state}`
+                  : "Location not available"}
+                <button
+                  aria-label="Change location"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setIsChangeLocationDialogOpen(true);
+                  }}
+                  title="Change location"
+                  type="button"
+                >
+                  <MapPinPen />
+                </button>
+              </div> */}
+            </div>
             {/* Top panel */}
             <div
-              className={`p-6 bold mt-0 rounded-2xl mt-[50vh] min-w-[350px] z-10`}
+              className={`z-10 min-w-[350px] rounded-2xl p-6 font-bold`}
               style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
