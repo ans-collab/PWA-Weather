@@ -37,26 +37,6 @@ const App: React.FC = () => {
     });
   }, []);
 
-  const timeoutId = React.useRef<any | null>(null);
-  useEffect(() => {
-    if (locationCity && locationState) {
-      if (timeoutId) {
-        clearTimeout(timeoutId.current);
-      }
-      setTimeout(async () => {
-        const _location = await LocationClient.getGeoLocationByCityAndState(
-          locationCity,
-          locationState,
-        );
-        if (_location && _location.latitude && _location.latitude) {
-          loadScenicPhoto(_location);
-          setLocation(_location);
-          setLocationPermission(LocationPermissionState.LocatedProvided);
-        }
-      }, 1500);
-    }
-  }, [locationCity, locationState]);
-
   // initialize when location permission is determined.
   useEffect(() => {
     if (!isReadyToLoadWeather()) {
@@ -104,8 +84,12 @@ const App: React.FC = () => {
         }
       }
 
-      const _city = locationData ? locationData.address.city : geoLocation?.address.city;
-      const _state = locationData ? locationData.address.state : geoLocation?.address.state;
+      const _city = locationData
+        ? locationData.address.city
+        : geoLocation?.address.city;
+      const _state = locationData
+        ? locationData.address.state
+        : geoLocation?.address.state;
 
       // load scenic photo.
       const photoResponse: IPexelData | null = await PexelClient.getRandomImage(
@@ -173,6 +157,42 @@ const App: React.FC = () => {
     setLocationPermission(LocationPermissionState.NoPermission);
   };
 
+  const locationChnageObject: {
+    City?: string;
+    State?: string;
+  } = {};
+
+  const timeoutId = React.useRef<any | null>(null);
+
+  const updateCityInput = (value: string) => {
+    locationChnageObject.City = value;
+    triggerChangeDetection();
+  };
+
+  const updateStateInput = (value: string) => {
+    locationChnageObject.State = value;
+    triggerChangeDetection();
+  };
+
+  const triggerChangeDetection = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId.current);
+    }
+    if (locationChnageObject.City && locationChnageObject.State) {
+      setTimeout(async () => {
+        const _location = await LocationClient.getGeoLocationByCityAndState(
+          locationChnageObject.City + "",
+          locationChnageObject.State + "",
+        );
+        if (_location && _location.latitude && _location.latitude) {
+          loadScenicPhoto(_location);
+          setLocation(_location);
+          setLocationPermission(LocationPermissionState.LocatedProvided);
+        }
+      }, 1500);
+    }
+  };
+
   return (
     <div
       className="app-shell relative"
@@ -221,28 +241,28 @@ const App: React.FC = () => {
       ) : (
         <div className="flex flex-col h-full items-center justify-between text-black bg-whitesmoke ">
           <div>
-            <p className="text-center text-lg font-semibold p-10">
-              Provide your City, State:
+            <p className="text-center text-lg font-semibold p-10 text-gray-500">
+              Provide a location:
             </p>
             <div className="flex flex-row items-center gap-4">
               <input
                 type="text"
                 placeholder="City"
-                className="rounded border border-gray-300 px-3 py-2 text-sm"
-                onChange={(e) => setLocationCity(e.target.value)}
+                className="rounded border border-gray-500 px-3 py-2 text-sm"
+                onChange={(e) => updateCityInput(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="State"
-                className="rounded border border-gray-300 px-3 py-2 text-sm"
-                onChange={(e) => setLocationState(e.target.value)}
+                className="rounded border border-gray-500 px-3 py-2 text-sm"
+                onChange={(e) => updateStateInput(e.target.value)}
               />
             </div>
           </div>
           <p className="text-center text-sm p-10 text-gray-500">
             You can skip this step if you enable location permission. Note: On
             mobile devices, you may have to enable location services on your
-            default browser as well as your system settings.
+            browser as well as your system settings.
           </p>
         </div>
       )}
