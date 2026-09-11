@@ -5,9 +5,19 @@ import { PexelClient } from "./clients/PexelClient";
 import { LocationClient } from "./clients/locationClient";
 import { ILocationData } from "./engine/location.models";
 
+enum LocationPermissionState {
+  None,
+  NoPermission,
+  PermissionGranted,
+  LocatedProvided,
+};
+
 /// The Weather App.
 const App: React.FC = () => {
   const [location, setLocation] = useState<ILocationData | undefined>();
+  const [locationPermission, setLocationPermission] = useState<LocationPermissionState>(LocationPermissionState.None);
+  const [locationCity, setLocationCity] = useState<string | null>(null);
+  const [locationState, setLocationState] = useState<string | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<
     IPexelData["photos"][number] | null
   >(null);
@@ -17,6 +27,29 @@ const App: React.FC = () => {
 
   // constructor
   useEffect(() => {
+    LocationClient.isGeolocationEnabled().then((enabled) => {
+      setLocationPermission(enabled ? LocationPermissionState.PermissionGranted : LocationPermissionState.NoPermission);
+    });
+  }, []);
+
+  const timeoutId = React.useRef<any | null>(null);
+  useEffect(() => {
+    if (locationCity && locationState) {
+      if (timeoutId) {
+        clearTimeout(timeoutId.current);
+      }
+      setTimeout(() => {
+        setLocationPermission(LocationPermissionState.LocatedProvided);
+      }, 500);
+    }
+  }, [locationCity, locationState]);
+
+  // initialize when location permission is determined.
+  useEffect(() => {
+    if (!isReadyToLoadWeather()) {
+      return;
+    }
+
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setInstallPrompt(event as BeforeInstallPromptEvent);
@@ -71,7 +104,14 @@ const App: React.FC = () => {
       );
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
-  }, []);
+  }, [locationPermission]);
+
+  const isReadyToLoadWeather = (): boolean => {
+    if (locationPermission === LocationPermissionState.None) {
+      return false;
+    }
+    return locationPermission === LocationPermissionState.PermissionGranted || locationPermission === LocationPermissionState.LocatedProvided;
+  };
 
   const installApp = async () => {
     if (!installPrompt) return;
@@ -105,7 +145,7 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="app-shell relative bg-gray-500"
+      className="app-shell relative"
       style={{
         backgroundImage: selectedPhoto
           ? `url(${selectedPhoto.src.portrait})`
@@ -140,11 +180,29 @@ const App: React.FC = () => {
           {shareMessage}
         </div>
       )}
-      <Weather
-        location={location}
-        photographer={selectedPhoto?.photographer}
-        description={selectedPhoto?.alt}
-      />
+
+      {isReadyToLoadWeather() ? (
+        <Weather
+          location={location}
+          photographer={selectedPhoto?.photographer}
+          description={selectedPhoto?.alt}
+        />
+      ) : (
+        <div className="flex flex-col h-full items-center justify-between text-black bg-whitesmoke ">
+          <div>
+            <p className="text-center text-lg font-semibold p-10">
+              Provide your City, State:
+            </p>
+            <div className="flex flex-row items-center gap-4">
+              <input type='text' placeholder="City" className="rounded border border-gray-300 px-3 py-2 text-sm" onChange={(e) => setLocationCity(e.target.value)} />
+              <input type='text' placeholder="State" className="rounded border border-gray-300 px-3 py-2 text-sm" onChange={(e) => setLocationState(e.target.value)} />
+            </div>
+          </div>
+          <p className="text-center text-sm p-10 text-gray-500">
+            You can skip this step if you enable location permission. Note: On mobile devices, you may have to enable location services on your default browser as well as your system settings.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
