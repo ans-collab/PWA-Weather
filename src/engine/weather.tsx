@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LocationClient } from "../clients/locationClient";
 import { ILocationData } from "./location.models";
 import { WeatherClient } from "../clients/weatherClient";
@@ -48,6 +48,56 @@ const formatForecastDate = (date: string) => {
   const day = String(forecastDate.getDate()).padStart(2, "0");
 
   return `${month}/${day}`;
+};
+
+const HorizontalScroll = ({ children }: { children: React.ReactNode }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  useEffect(() => {
+    const scrollElement = scrollRef.current;
+    if (!scrollElement) {
+      return;
+    }
+
+    const updateScrollState = () => {
+      setCanScrollLeft(scrollElement.scrollLeft > 0);
+      setCanScrollRight(
+        scrollElement.scrollLeft + scrollElement.clientWidth <
+          scrollElement.scrollWidth - 1,
+      );
+    };
+
+    updateScrollState();
+    scrollElement.addEventListener("scroll", updateScrollState, {
+      passive: true,
+    });
+    const resizeObserver = new ResizeObserver(updateScrollState);
+    resizeObserver.observe(scrollElement);
+
+    return () => {
+      scrollElement.removeEventListener("scroll", updateScrollState);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  return (
+    <div className="relative">
+      <div
+        className="flex flex-row gap-2 overflow-x-auto pb-3"
+        ref={scrollRef}
+      >
+        {children}
+      </div>
+      {canScrollLeft && (
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white/40 via-white/15 to-transparent" />
+      )}
+      {canScrollRight && (
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white/40 via-white/15 to-transparent" />
+      )}
+    </div>
+  );
 };
 
 export const Weather = ({
@@ -312,7 +362,7 @@ export const Weather = ({
                 >
                   Hourly Forecast
                 </div>
-                <div className="flex flex-row gap-2 overflow-x-auto pb-3">
+                <HorizontalScroll>
                   {weather.hourly.time.slice(0, 24).map((date, index) => (
                     <div
                       className="flex flex-col shrink-0 items-center gap-1 rounded-xl bg-black/60 p-2 text-left lg:block w-[150px]"
@@ -347,7 +397,7 @@ export const Weather = ({
                       </div>
                     </div>
                   ))}
-                </div>
+                </HorizontalScroll>
               </div>
             )}
 
@@ -362,7 +412,7 @@ export const Weather = ({
                 >
                   7 Day Forecast
                 </div>
-                <div className="flex flex-row gap-2 overflow-x-auto pb-3">
+                <HorizontalScroll>
                   {weather.daily.time.slice(0, 7).map((date, index) => (
                     <div
                       className="flex flex-col shrink-0 items-center gap-1 rounded-xl bg-black/60 p-2 text-left lg:block w-[150px]"
@@ -400,7 +450,7 @@ export const Weather = ({
                       </div>
                     </div>
                   ))}
-                </div>
+                </HorizontalScroll>
               </div>
             )}
           </>
