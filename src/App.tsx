@@ -165,6 +165,14 @@ const App: React.FC = () => {
     }
   };
 
+  const changeLocation = () => {
+    setLocation(undefined);
+    setSelectedPhoto(null);
+    setLocationCity(null);
+    setLocationState(null);
+    setLocationPermission(LocationPermissionState.NoPermission);
+  };
+
   return (
     <div
       className="app-shell relative"
@@ -205,6 +213,7 @@ const App: React.FC = () => {
 
       {isReadyToLoadWeather() ? (
         <Weather
+          changeLocation={changeLocation}
           location={location}
           photographer={selectedPhoto?.photographer}
           description={selectedPhoto?.alt}

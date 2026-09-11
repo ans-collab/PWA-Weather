@@ -3,11 +3,13 @@ import { LocationClient } from "../clients/locationClient";
 import { ILocationData } from "./location.models";
 import { WeatherClient } from "../clients/weatherClient";
 import { getWeatherCondition, IWeatherData } from "./weather.models";
+import { MapPinPen } from "lucide-react";
 
 interface WeatherProps {
   location?: ILocationData;
   photographer?: string;
   description?: string;
+  changeLocation?: () => void;
 }
 
 const isNightTime = (timestamp: string) => {
@@ -51,10 +53,13 @@ export const Weather = ({
   location,
   photographer,
   description,
+  changeLocation,
 }: WeatherProps) => {
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<IWeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isChangeLocationDialogOpen, setIsChangeLocationDialogOpen] =
+    useState(false);
   const textColor = "text-white";
   const panelBackgroundColor = "rgba(79, 102, 186, 0.47)";
 
@@ -146,6 +151,45 @@ export const Weather = ({
 
   return (
     <div className="overflow-y-auto">
+      {isChangeLocationDialogOpen && (
+        <div
+          aria-labelledby="change-location-title"
+          aria-modal="true"
+          className="fixed inset-0 z-30 flex items-center justify-center bg-black/60 p-4"
+          role="dialog"
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-slate-900 shadow-2xl">
+            <h2
+              className="text-xl font-bold"
+              id="change-location-title"
+            >
+              Change location?
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Choose a new city and state to update your forecast.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsChangeLocationDialogOpen(false)}
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+                onClick={() => {
+                  setIsChangeLocationDialogOpen(false);
+                  changeLocation?.();
+                }}
+                type="button"
+              >
+                Change location
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start p-3 m:p-10">
         {photographer && (
           <div className="absolute right-[15px] top-10px] rounded bg-black/60 p-3 text-xs text-white text-right w-[60%]">
@@ -173,11 +217,22 @@ export const Weather = ({
               style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
-                className={`text-xl text-left ${textColor} text-shadow-lg text-shadow-black`}
+                className={`flex flex-row gap-3 text-xl text-left ${textColor} text-shadow-lg text-shadow-black`}
               >
                 {location
                   ? `${location.address.city}, ${location.address.state}`
                   : "Location not available"}
+                <button
+                  aria-label="Change location"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setIsChangeLocationDialogOpen(true);
+                  }}
+                  title="Change location"
+                  type="button"
+                >
+                  <MapPinPen />
+                </button>
               </div>
               {weather ? (
                 <div className="mt-5 text-start text-white">
