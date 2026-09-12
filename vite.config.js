@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const appVersion = 'v0.2.1'
+const appVersion = 'v0.5'
 
 export default defineConfig({
   define: {
@@ -74,7 +74,7 @@ export default defineConfig({
         name: `Forecast`,
         id: `Forecast`,
         short_name: `Forecast`,
-        description: 'This is your local weather app with no ads, no fuss, no mess. It just works. It nothing nothing more, and nothing less. Expect incremental updates for added enhancements.',
+        description: 'This is your goto weather app with no fuss and no mess. Just a simple, clean weather app.',
         start_url: '/',
         scope: '/',
         display: 'standalone',
