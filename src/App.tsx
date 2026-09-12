@@ -148,7 +148,7 @@ const App: React.FC = () => {
   const shareApp = async () => {
     const shareData = {
       title: "Forecast",
-      text: "Check your local weather with Forecast.",
+      text: "Get your forecast, plus a few extra neat facts about the area.",
       url: window.location.href,
     };
 
@@ -275,13 +275,13 @@ const App: React.FC = () => {
               <input
                 type="text"
                 placeholder="City"
-                className="rounded border border-gray-500 px-3 py-2 text-sm"
+                className="rounded border border-gray-500 px-3 py-2 text-base w-full"
                 onChange={(e) => updateCityInput(e.target.value)}
               />
               <input
                 type="text"
-                placeholder="State"
-                className="rounded border border-gray-500 px-3 py-2 text-sm"
+                placeholder="State / Province / Country"
+                className="rounded border border-gray-500 px-3 py-2 text-base w-full"
                 onChange={(e) => updateStateInput(e.target.value)}
               />
             </div>

@@ -31,7 +31,7 @@ const WeatherAnimation = ({
       className={`w-full weather-animation ${condition.icon}`}
       role="img"
       aria-label={condition.name}
-      style={{ borderRadius: 8, opacity: 0.88 }}
+      style={{ borderRadius: 8, opacity: 0.7 }}
     >
       <span className="weather-animation__sun" />
       <span className="weather-animation__cloud" />
@@ -203,6 +203,7 @@ export const Weather = ({
 
   return (
     <div className="overflow-y-auto">
+      {/* Change location dialog */}
       {isChangeLocationDialogOpen && (
         <div
           aria-labelledby="change-location-title"
@@ -215,7 +216,7 @@ export const Weather = ({
               Change location?
             </h2>
             <p className="mt-2 text-sm text-slate-600">
-              Choose a new city and state to update your forecast.
+              Choose a new location to update your forecast.
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
@@ -240,6 +241,7 @@ export const Weather = ({
         </div>
       )}
       <div className="relative flex min-h-0 flex-1 flex-col items-start justify-start p-3 m:p-10">
+        {/* Error display */}
         {error && (
           <div
             className="p-8 text-white bold rounded-2xl"
@@ -253,6 +255,7 @@ export const Weather = ({
         {!error && (
           <>
             <div className="grid h-[60vh] w-full mb-2">
+              {/* Photgrapher and description display */}
               {photographer && (
                 <div className="sticky top-2 z-10 col-start-1 row-start-1 ml-auto h-fit w-[70%] self-start rounded bg-black/60 p-3 text-right text-white">
                   <div className="mb-[5px] text-left text-base">
@@ -283,9 +286,10 @@ export const Weather = ({
                 </button>
               </div> */}
             </div>
+
             {/* Top panel */}
             <div
-              className={`z-10 min-w-[350px] rounded-2xl p-6 font-bold`}
+              className={`z-10 min-w-[250px] rounded-2xl p-6 font-bold`}
               style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
@@ -296,7 +300,7 @@ export const Weather = ({
                   : "Location not available"}
                 <button
                   aria-label="Change location"
-                  className="cursor-pointer"
+                  className="cursor-pointer rounded-full bg-cyan-300/10 p-1 shadow-[0_0_8px_3px_rgba(34,211,238,0.45)]"
                   style={{ color: "cyan" }}
                   onClick={() => {
                     setIsChangeLocationDialogOpen(true);
@@ -307,6 +311,7 @@ export const Weather = ({
                   <MapPinPen />
                 </button>
               </div>
+
               {weather ? (
                 <div className="mt-5 text-start text-white">
                   <div className="flex flex-row gap-3 items-center">
