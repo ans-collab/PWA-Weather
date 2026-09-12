@@ -271,7 +271,7 @@ const App: React.FC = () => {
             <p className="text-center text-lg font-semibold p-10 text-gray-500">
               Provide a location:
             </p>
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-col items-center gap-4">
               <input
                 type="text"
                 placeholder="City"

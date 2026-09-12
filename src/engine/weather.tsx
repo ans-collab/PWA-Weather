@@ -91,10 +91,10 @@ const HorizontalScroll = ({ children }: { children: React.ReactNode }) => {
         {children}
       </div>
       {canScrollLeft && (
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white/40 via-white/15 to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-cyan-400/40 to-transparent" />
       )}
       {canScrollRight && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white/40 via-white/15 to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-cyan-400/40 to-transparent" />
       )}
     </div>
   );
@@ -254,8 +254,8 @@ export const Weather = ({
           <>
             <div className="grid h-[60vh] w-full mb-2">
               {photographer && (
-                <div className="sticky top-2 z-10 col-start-1 row-start-1 ml-auto h-fit w-[60%] self-start rounded bg-black/60 p-3 text-right text-xs text-white">
-                  <div className="mb-[5px] text-left text-sm">
+                <div className="sticky top-2 z-10 col-start-1 row-start-1 ml-auto h-fit w-[70%] self-start rounded bg-black/60 p-3 text-right text-white">
+                  <div className="mb-[5px] text-left text-base">
                     "{description}"
                   </div>
                   <div>By {photographer}</div>
@@ -458,8 +458,8 @@ export const Weather = ({
         )}
       </div>
 
-      <div className="flex w-full shrink-0 flex-row justify-center text-md">
-        <div className="rounded bg-black/60 px-2 py-1 text-xs text-white m-1">
+      <div className="flex w-full shrink-0 flex-row justify-center text-base">
+        <div className="rounded bg-black/60 px-2 py-1 text-sm text-white m-1">
           Weather provided by Open-Meteo
         </div>
       </div>
