@@ -32,10 +32,7 @@ const App: React.FC = () => {
     window.addEventListener("sw-update-available", handleUpdateAvailable);
 
     return () => {
-      window.removeEventListener(
-        "sw-update-available",
-        handleUpdateAvailable,
-      );
+      window.removeEventListener("sw-update-available", handleUpdateAvailable);
     };
   }, []);
 
@@ -93,9 +90,9 @@ const App: React.FC = () => {
       } else {
         geoLocation = {
           address: {
-            city: '',
-            state: '',
-            country: ''
+            city: "",
+            state: "",
+            country: "",
           },
           longitude: locationData.longitude,
           latitude: locationData.latitude,
@@ -223,7 +220,10 @@ const App: React.FC = () => {
       }}
     >
       <header className="flex h-12 shrink-0 items-center justify-between bg-black/70 px-4 text-white">
-        <h1 className="font-bold">Forecast <span className="text-xs text-gray-400">{__APP_VERSION__}</span></h1>
+        <h1 className="font-bold">
+          Forecast{" "}
+          <span className="text-xs text-gray-400">{__APP_VERSION__}</span>
+        </h1>
         <div className="flex items-center gap-2">
           <button
             className="rounded bg-white/90 px-3 py-1 text-sm font-semibold text-black hover:bg-white"
@@ -271,17 +271,17 @@ const App: React.FC = () => {
             <p className="text-center text-lg font-semibold p-10 text-gray-500">
               Provide a location:
             </p>
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex w-full flex-col items-stretch gap-4 sm:flex-row sm:items-center">
               <input
                 type="text"
                 placeholder="City"
-                className="rounded border border-gray-500 px-3 py-2 text-base w-full"
+                className="min-w-0 rounded border border-gray-500 px-3 py-2 text-base w-full sm:flex-1"
                 onChange={(e) => updateCityInput(e.target.value)}
               />
               <input
                 type="text"
-                placeholder="State / Province / Country"
-                className="rounded border border-gray-500 px-3 py-2 text-base w-full"
+                placeholder="State"
+                className="min-w-0 rounded border border-gray-500 px-3 py-2 text-base w-full sm:flex-1"
                 onChange={(e) => updateStateInput(e.target.value)}
               />
             </div>
