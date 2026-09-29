@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { LocationClient } from "../clients/locationClient";
-import { ILocationData } from "./location.models";
-import { WeatherClient } from "../clients/weatherClient";
-import { getWeatherCondition, IWeatherData } from "./weather.models";
 import { MapPinPen } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { WeatherClient } from "../clients/weatherClient";
+import { ILocationData } from "./location.models";
+import { getWeatherCondition, IWeatherData } from "./weather.models";
 
 interface WeatherProps {
   location?: ILocationData;
@@ -84,10 +83,7 @@ const HorizontalScroll = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="relative">
-      <div
-        className="flex flex-row gap-2 overflow-x-auto pb-3"
-        ref={scrollRef}
-      >
+      <div className="flex flex-row gap-2 overflow-x-auto pb-3" ref={scrollRef}>
         {children}
       </div>
       {canScrollLeft && (
@@ -106,6 +102,7 @@ export const Weather = ({
   description,
   changeLocation,
 }: WeatherProps) => {
+  const currentConditionsRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<IWeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -166,6 +163,15 @@ export const Weather = ({
     initialize();
   }, [location]);
 
+  useEffect(() => {
+    if (!loading) {
+      currentConditionsRef.current?.scrollIntoView({
+        block: "end",
+        behavior: "smooth",
+      });
+    }
+  }, [loading]);
+
   if (loading) {
     return (
       <div className="fixed inset-0 z-20 flex items-center justify-center">
@@ -202,8 +208,7 @@ export const Weather = ({
   }
 
   return (
-    <div className="overflow-y-auto">
-      {/* Change location dialog */}
+    <div className="min-h-0 flex-1 overflow-y-auto">
       {isChangeLocationDialogOpen && (
         <div
           aria-labelledby="change-location-title"
@@ -254,7 +259,7 @@ export const Weather = ({
 
         {!error && (
           <>
-            <div className="grid h-[60vh] w-full mb-2">
+            <div className="grid h-[60vh] w-full mb-8">
               {/* Photgrapher and description display */}
               {photographer && (
                 <div className="sticky top-2 z-10 col-start-1 row-start-1 ml-auto h-fit w-[70%] self-start rounded bg-black/60 p-3 text-right text-white">
@@ -289,7 +294,8 @@ export const Weather = ({
 
             {/* Top panel */}
             <div
-              className={`z-10 min-w-[250px] rounded-2xl p-6 font-bold`}
+              className="z-10 mb-3 min-w-[240px] scroll-mb-3 rounded-2xl p-6 font-bold"
+              ref={currentConditionsRef}
               style={{ backgroundColor: panelBackgroundColor }}
             >
               <div
@@ -410,7 +416,7 @@ export const Weather = ({
             {/* 7 Day Forecast panel */}
             {weather && (
               <div
-                className={`p-6 bold rounded-2xl mt-2 w-full`}
+                className={`p-6 bold rounded-2xl mt-5 w-full`}
                 style={{ backgroundColor: panelBackgroundColor }}
               >
                 <div
