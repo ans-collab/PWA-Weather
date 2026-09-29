@@ -13,7 +13,7 @@ enum LocationPermissionState {
 }
 
 /// The Weather App.
-const App: React.FC = () => {
+const ForecastApp: React.FC = () => {
   const [location, setLocation] = useState<ILocationData | undefined>();
   const [locationPermission, setLocationPermission] =
     useState<LocationPermissionState>(LocationPermissionState.None);
@@ -250,6 +250,12 @@ const App: React.FC = () => {
               Update
             </button>
           )}
+          <a
+            className="text-sm text-white/80 underline-offset-2 hover:text-white hover:underline"
+            href="/privacy"
+          >
+            Privacy
+          </a>
         </div>
       </header>
       {shareMessage && (
@@ -296,5 +302,92 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+const PrivacyPolicy: React.FC = () => (
+  <main className="min-h-screen bg-whitesmoke px-6 py-10 text-gray-900 sm:px-10">
+    <article className="mx-auto max-w-3xl rounded bg-white p-6 shadow-sm sm:p-10">
+      <a className="text-sm text-gray-600 underline hover:text-gray-900" href="/">
+        Back to Forecast
+      </a>
+      <h1 className="mt-6 text-3xl font-bold">Privacy Policy</h1>
+      <p className="mt-2 text-sm text-gray-600">Last updated: September 28, 2026</p>
+
+      <section className="mt-8 space-y-4 leading-7">
+        <h2 className="text-xl font-semibold">Location data</h2>
+        <p>
+          Forecast may request access to your device&apos;s location to obtain
+          weather information for your area. Location data is used only to make
+          the weather and location lookups you request.
+        </p>
+        <p>
+          Forecast does not store your precise location information after the
+          request. You can use the app without granting location permission by
+          entering a city and state manually.
+        </p>
+
+        <h2 className="pt-4 text-xl font-semibold">Weather data</h2>
+        <p>
+          Forecast uses Open-Meteo to retrieve weather data based on your
+          location. Weather requests may include latitude, longitude, and
+          forecast preferences. Open-Meteo processes those requests according
+          to its own privacy policy.
+        </p>
+
+        <h2 className="pt-4 text-xl font-semibold">Photos</h2>
+        <p>
+          Forecast uses the Pexels API to retrieve scenic photos. Photo search
+          requests may include a city or state query, and images are loaded
+          from Pexels. Pexels processes requests according to its own privacy
+          policy.
+        </p>
+
+        <h2 className="pt-4 text-xl font-semibold">Analytics</h2>
+        <p>
+          Cloudflare Web Analytics may collect analytics information about
+          visits to the app, such as page views and basic device or browser
+          information. This helps us understand usage and improve the app.
+          Cloudflare processes this information according to its privacy
+          policy.
+        </p>
+
+        <h2 className="pt-4 text-xl font-semibold">Cookies and local storage</h2>
+        <p>
+          Forecast does not set cookies directly. The app stores weather
+          responses in your browser&apos;s local storage to make subsequent views
+          faster and support limited offline use. The service worker may also
+          store app files, weather responses, and images in the browser&apos;s
+          Cache Storage. You can remove this data through your browser settings.
+        </p>
+
+        <h2 className="pt-4 text-xl font-semibold">Sale and sharing</h2>
+        <p>
+          Forecast does not sell personal information. We do not share location
+          information for advertising, profiling, or unrelated purposes.
+          Information may be sent to Open-Meteo, Pexels, geocoding providers,
+          and Cloudflare as necessary to provide and operate the app; those
+          providers handle information under their own privacy policies.
+        </p>
+
+        <h2 className="pt-4 text-xl font-semibold">Contact</h2>
+        <p>
+          If you have questions about this policy or the app&apos;s privacy
+          practices, please contact the app owner through the{" "}
+          <a
+            className="underline hover:text-gray-600"
+            href="https://github.com/ans-collab/PWA-Weather"
+            rel="noreferrer"
+            target="_blank"
+          >
+            project repository
+          </a>
+          .
+        </p>
+      </section>
+    </article>
+  </main>
+);
+
+const App: React.FC = () =>
+  window.location.pathname === "/privacy" ? <PrivacyPolicy /> : <ForecastApp />;
 
 export default App;
