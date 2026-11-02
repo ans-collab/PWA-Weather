@@ -105,6 +105,7 @@ export const Weather = ({
   const currentConditionsRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<IWeatherData | null>(null);
+  const [weatherSummary, setWeatherSummary] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isChangeLocationDialogOpen, setIsChangeLocationDialogOpen] =
     useState(false);
@@ -122,6 +123,7 @@ export const Weather = ({
     }
 
     setError(null);
+    setWeatherSummary(null);
     const cacheKey = `weather:${location.latitude.toFixed(2)}:${location.longitude.toFixed(2)}`;
     const cachedWeather = localStorage.getItem(cacheKey);
     let hasCachedWeather = false;
@@ -143,10 +145,12 @@ export const Weather = ({
           location.latitude,
         );
         setWeather(weatherData);
-        setLoading(false);
+
         if (weatherData) {
           localStorage.setItem(cacheKey, JSON.stringify(weatherData));
         }
+
+        setLoading(false);
       } catch (e: any) {
         console.error("Weather: Error fetching weather data", e);
         if (!hasCachedWeather) {
@@ -162,6 +166,50 @@ export const Weather = ({
 
     initialize();
   }, [location]);
+
+  useEffect(() => {
+    if (!weather) {
+      return;
+    }
+
+    const abortController = new AbortController();
+    const loadWeatherSummary = async () => {
+      try {
+        const summaryResponse = await fetch("/api/weather-summary", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(weather),
+          signal: abortController.signal,
+        });
+
+        if (!summaryResponse.ok) {
+          throw new Error(
+            `Weather summary request failed (${summaryResponse.status})`,
+          );
+        }
+
+        const summaryData: { summary?: unknown } =
+          await summaryResponse.json();
+        if (typeof summaryData.summary !== "string") {
+          throw new Error("Weather summary response was invalid");
+        }
+
+        setWeatherSummary(summaryData.summary);
+      } catch (summaryError) {
+        if (!abortController.signal.aborted) {
+          console.error("Weather: Error fetching weather summary", summaryError);
+        }
+      }
+    };
+
+    void loadWeatherSummary();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [weather]);
 
   useEffect(() => {
     if (!loading) {
@@ -345,7 +393,7 @@ export const Weather = ({
                       </span>
                     </div>
                     <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-lg">
-                      <div>
+                      {/* <div>
                         Humidity: {weather.current.relative_humidity_2m}%
                       </div>
                       <div></div>
@@ -353,7 +401,12 @@ export const Weather = ({
                       <div>
                         Updated:{" "}
                         {new Date(weather.current.time).toLocaleTimeString()}
-                      </div>
+                      </div> */}
+                      {weatherSummary && (
+                        <div className="col-span-2 text-base leading-relaxed text-cyan-50">
+                          {weatherSummary}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
