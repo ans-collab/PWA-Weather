@@ -262,12 +262,11 @@ export const Weather = ({
             <div className="grid h-[60vh] w-full mb-8">
               {/* Photgrapher and description display */}
               {photographer && (
-                <div className="sticky top-2 z-10 col-start-1 row-start-1 ml-auto h-fit w-[70%] self-start rounded bg-black/60 p-3 text-right text-white">
-                  <div className="mb-[5px] text-left text-base">
+                <div className="sticky text-lg top-2 z-10 col-start-1 row-start-1 ml-auto h-fit w-[90%] self-start rounded bg-black/60 p-3 text-right text-white">
+                  <div className="mb-[5px] text-left text-xl">
                     "{description}"
                   </div>
-                  <div>By {photographer}</div>
-                  <div>pexels.com</div>
+                  <div>~ {photographer} from pexels.com</div>
                 </div>
               )}
 
