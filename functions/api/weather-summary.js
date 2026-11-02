@@ -10,8 +10,9 @@ Summarize the following weather data in natural language.
 Rules:
 - Use no more than 2 sentences.
 - Be concise and conversational.
-- Mention temperature and important weather conditions for the current day.
+- Mention temperature and important weather conditions.
 - Mention weather conditions only when relevant.
+- Only provide summary, dont include any info/metadata about the summary.
 - Do not invent weather information.
 - Do not repeat raw weather codes.
 

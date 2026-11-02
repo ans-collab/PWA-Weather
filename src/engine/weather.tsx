@@ -190,8 +190,7 @@ export const Weather = ({
           );
         }
 
-        const summaryData: { summary?: unknown } =
-          await summaryResponse.json();
+        const summaryData: { summary?: unknown } = await summaryResponse.json();
         if (typeof summaryData.summary !== "string") {
           throw new Error("Weather summary response was invalid");
         }
@@ -199,7 +198,10 @@ export const Weather = ({
         setWeatherSummary(summaryData.summary);
       } catch (summaryError) {
         if (!abortController.signal.aborted) {
-          console.error("Weather: Error fetching weather summary", summaryError);
+          console.error(
+            "Weather: Error fetching weather summary",
+            summaryError,
+          );
         }
       }
     };
@@ -224,11 +226,11 @@ export const Weather = ({
     return (
       <div className="fixed inset-0 z-20 flex items-center justify-center">
         <div
-          className="p-8 text-white bold rounded-2xl"
+          className="p-8 text-white bold rounded-lg"
           style={{ backgroundColor: panelBackgroundColor }}
         >
           <div
-            className="flex items-center justify-center gap-5 rounded-2xl p-8 text-blue-600"
+            className="flex items-center justify-center gap-5 rounded-lg p-8 text-blue-600"
             role="status"
             style={{ backgroundColor: "transparent" }}
           >
@@ -264,7 +266,7 @@ export const Weather = ({
           className="fixed inset-0 z-30 flex items-center justify-center bg-black/60 p-4"
           role="dialog"
         >
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-slate-900 shadow-2xl">
+          <div className="w-full max-w-sm rounded-lg bg-white p-6 text-slate-900 shadow-2xl">
             <h2 className="text-xl font-bold" id="change-location-title">
               Change location?
             </h2>
@@ -339,9 +341,21 @@ export const Weather = ({
               </div> */}
             </div>
 
+            {/* Weather summary */}
+            {weatherSummary && (
+              <div
+                className="flex min-h-[16vh] w-full items-center justify-start text-left p-6 mb-4 rounded-lg"
+                style={{ backgroundColor: panelBackgroundColor }}
+              >
+                <div className="text-base leading-relaxed text-cyan-50 text-xl">
+                  {weatherSummary}
+                </div>
+              </div>
+            )}
+
             {/* Top panel */}
             <div
-              className="z-10 mb-3 min-w-[240px] scroll-mb-3 rounded-2xl p-6 font-bold"
+              className="z-10 mb-3 min-w-[240px] scroll-mb-3 rounded-lg p-6 font-bold"
               ref={currentConditionsRef}
               style={{ backgroundColor: panelBackgroundColor }}
             >
@@ -392,22 +406,6 @@ export const Weather = ({
                         }
                       </span>
                     </div>
-                    <div className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-lg">
-                      {/* <div>
-                        Humidity: {weather.current.relative_humidity_2m}%
-                      </div>
-                      <div></div>
-                      <div>Wind: {weather.current.wind_speed_10m} mph</div>
-                      <div>
-                        Updated:{" "}
-                        {new Date(weather.current.time).toLocaleTimeString()}
-                      </div> */}
-                      {weatherSummary && (
-                        <div className="col-span-2 text-base leading-relaxed text-cyan-50">
-                          {weatherSummary}
-                        </div>
-                      )}
-                    </div>
                   </div>
                 </div>
               ) : (
@@ -418,7 +416,7 @@ export const Weather = ({
             {/* Today's Forecast panel */}
             {weather && (
               <div
-                className={`p-6 bold rounded-2xl mt-2 w-full`}
+                className={`p-6 bold rounded-lg mt-2 w-full`}
                 style={{ backgroundColor: panelBackgroundColor }}
               >
                 <div
@@ -468,7 +466,7 @@ export const Weather = ({
             {/* 7 Day Forecast panel */}
             {weather && (
               <div
-                className={`p-6 bold rounded-2xl mt-5 w-full`}
+                className={`p-6 bold rounded-lg mt-5 w-full`}
                 style={{ backgroundColor: panelBackgroundColor }}
               >
                 <div

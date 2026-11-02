@@ -101,7 +101,26 @@ export default defineConfig({
           }
         ]
       }
-    })
+    }),
+    {
+      name: 'local-weather-summary',
+      configureServer(server) {
+        server.middlewares.use('/api/weather-summary', (request, response) => {
+          if (request.method !== 'POST') {
+            response.statusCode = 405
+            response.setHeader('Allow', 'POST')
+            response.end()
+            return
+          }
+
+          response.statusCode = 200
+          response.setHeader('Content-Type', 'application/json')
+          response.end(JSON.stringify({
+            summary: 'Local development mock: Conditions are mild with partly cloudy skies.',
+          }))
+        })
+      },
+    },
   ],
   server: {
     port: 5174,
